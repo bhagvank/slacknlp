@@ -6,4 +6,5 @@ python_version = "3.6"
 [packages]
 django = "*"
 gunicorn = "*"
+psycopg-binary = "*"
 django-heroku = "*"
