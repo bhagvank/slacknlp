@@ -13,6 +13,7 @@ class SlackUtil:
 
      self.data = []
      self.slack_token = os.environ['SLACK_TOKEN']
+     print("slack token", self.slack_token)
      self.sc = SlackClient(self.slack_token)
 
     def listChannels(self):
