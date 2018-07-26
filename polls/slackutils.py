@@ -3,7 +3,7 @@ from slackclient import SlackClient
 import json
 from django.conf import settings
 import os
-
+from boto.s3.connection import S3Connection
 
 class SlackUtil:
 
@@ -15,6 +15,8 @@ class SlackUtil:
      self.slack_token = os.environ['SLACK_TOKEN']
      print("slack token", self.slack_token)
      self.sc = SlackClient(self.slack_token)
+     s3 = S3Connection(os.environ['ACCESS_KEY_ID'], os.environ['SECRET_ACCESS_KEY'])
+     s3.Bucket('googleservicejson').download_file('/app/service.json', 'service.json')   
 
     def listChannels(self):
 
