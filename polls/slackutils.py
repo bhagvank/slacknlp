@@ -1,6 +1,7 @@
 from slackclient import SlackClient
 #from sets import Set
 import json
+from django.conf import settings
 
 
 class SlackUtil:
@@ -10,7 +11,7 @@ class SlackUtil:
     def __init__(self):
 
      self.data = []
-     self.slack_token = "xoxp-399005362672-399475669492-401042564614-6319e85654d14062c29cb4169bb57138"
+     self.slack_token = settings.slack_token
      self.sc = SlackClient(self.slack_token)
 
     def listChannels(self):
