@@ -1,0 +1,40 @@
+from google.cloud import language
+from google.oauth2 import service_account
+from google.cloud.language import enums
+from google.cloud.language import types
+
+import json
+
+class NLPUtil:
+
+      def __init__(self):
+
+     self.data = []
+
+def analyseContentSentiment(self,messages):
+
+       credentials = service_account.Credentials.from_service_account_file(
+        'SlackNLP-07f85cf58b4e.json')
+
+       messageSentiments = {}
+       for message in messages:
+         # messagesString = messagesString + "\n" + message
+         client = language.LanguageServiceClient(credentials=credentials,)
+         document = language.types.Document(
+            content=message,
+            language='en',
+            type=enums.Document.Type.PLAIN_TEXT,
+
+        )
+         response = client.analyze_sentiment(
+            document=document, encoding_type='UTF8',)
+         sentiment = response.document_sentiment
+
+         userMessage = {}
+         userMessage["text"] = message.text
+         userMessage["score"] = sentiment.score
+         userMessage["magnitude"] = sentiment.magnitude
+         messageSentiments.append(userMessage)
+         #messageSentiments.append(sentiment)
+       return messageSentiments
+

@@ -1,0 +1,37 @@
+{% extends "polls/base.html" %}
+{% block title %}Messages{% endblock %}
+
+{% block header %}
+  <a class="active" href="/polls/">Home</a>
+  <a href="javascript:history.go(-1)">Back</a>
+  <BR>
+  <BR>
+
+{% endblock %}
+
+{% block content %}
+
+<b>Channel Name: {{channel}}</b>
+
+
+{% if messages %}
+
+    <table border=1>
+    <tr border=1>
+      <th> Text </th>
+      <th> User </th>
+      <th> Channel </th>
+    </tr> 	
+    {% for message in messages %}
+    <tr border=1>
+     <td border=1>{{ message.text }}</td> 
+     <td border=1><a href="/polls/results/{{message.user}}/">{{ message.user }}</a></td>
+     <td border=1>{{ message.channel }}</td> 
+    </tr>  
+{% endfor %}
+    </table>
+{% else %}
+    <p>No messages are available.</p>
+{% endif %}
+{% endblock %}
+

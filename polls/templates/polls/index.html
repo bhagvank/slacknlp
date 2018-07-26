@@ -1,0 +1,34 @@
+{% extends "polls/base.html" %}
+{% block title %}Channels{% endblock %}
+
+{% block header %}
+
+<BR>
+<BR>
+
+
+        
+{% endblock %}
+
+{% block content %}
+  
+ 
+{% if channels %}
+    <table border=1>
+    <tr border=1>
+      
+      <th> Channel </th>
+    </tr> 	
+    {% for channel in channels %}
+    <tr border=1>
+     <td border=1><a href="/polls/{{channel.id}}/">{{ channel.name }}</a></td> 
+    </tr>  
+{% endfor %}
+    </table>
+{% else %}
+    <p>No channels are available.</p>
+{% endif %}
+
+{% endblock %}
+
+
