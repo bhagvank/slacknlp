@@ -2,6 +2,7 @@ from google.cloud import language
 from google.oauth2 import service_account
 from google.cloud.language import enums
 from google.cloud.language import types
+from django.conf import settings
 
 import json
 
@@ -14,7 +15,7 @@ class NLPUtil:
 
     def analyseContentSentiment(self, messages):
         credentials = service_account.Credentials.from_service_account_file(
-        'SlackNLP-07f85cf58b4e.json')
+        settings.GOOGLE_SERVICE_JSON)
 
         messageSentiments = []
         #print("messages analyse",messages)
