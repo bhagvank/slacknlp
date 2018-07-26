@@ -11,7 +11,7 @@ class SlackUtil:
     def __init__(self):
 
      self.data = []
-     self.slack_token = settings.SLACK_TOKEN
+     self.slack_token = settings.SLACKTOKEN
      self.sc = SlackClient(self.slack_token)
 
     def listChannels(self):
