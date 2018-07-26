@@ -1,0 +1,36 @@
+{% extends "polls/base.html" %}
+{% block title %}Thread - Replies{% endblock %}
+
+{% block header %}
+ 
+  <a href="/polls/">Home</a>
+  <a href="javascript:history.go(-1)">Back</a>
+  <BR>
+<BR>
+  
+{% endblock %}
+
+{% block content %}
+
+<h1>Thread Id: {{thread}}</h1>
+<BR>
+<BR>
+
+<table border=1>
+	<tr border=1>
+		<th> Message</th>
+		<th> Sentiment Score </th>
+		<th> Sentiment Magnitude</th>
+{% for sentiment in sentiments %}
+<tr border=1>
+    <td border=1>{{sentiment.message.text}}</td>
+    <td border=1>{{sentiment.score}}</td>
+    <td border=1>{{sentiment.magnitude}}</td>
+</tr>    
+{% endfor %}
+</table>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

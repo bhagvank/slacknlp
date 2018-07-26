@@ -1,0 +1,37 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+<link rel="stylesheet" href="{% static "style/base.css" %}" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Channels{% endblock %}</title>
+<img src="{% static 'polls/images/logo.jpg' %}" width="150" height="150" class="center" align="middle">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="header">
+    {% block header %}
+        
+    {% endblock %}
+</div>  
+<div id="sidebar">
+    {% block sidebar %}
+        <BR>
+        <BR>
+    {% endblock %}
+</div>
+<div id="content">
+   {% block content %}
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% endblock %}
+</table>
+
+</div>
+<div id="footer">
+    <BR>
+    {% block footer %} CopyRight 2018 SlackNLP{% endblock %}
+    <BR>
+</div>
+</body>
+</html>

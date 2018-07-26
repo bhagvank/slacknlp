@@ -1,0 +1,42 @@
+{% extends "polls/base.html" %}
+{% block title %}Threads{% endblock %}
+
+{% block header %}
+ 
+  <a href="/polls/">Home</a>
+  <a href="javascript:history.go(-1)">Back</a>
+  <BR>
+<BR>
+  
+{% endblock %}
+
+{% block content %}
+
+<b>User Name: {{user}}</b>
+
+<table border=1>
+	<tr border=1>
+		<th> Thread</th>
+		<th> Message</th>
+		<th> Sentiment Score </th>
+		<th> Sentiment Magnitude</th>
+{% for sentiment in sentiments %}
+<tr border=1>
+
+    <td border=1>
+    	{% if sentiment.message.thread_ts == sentiment.message.ts %}
+    	  <a href="/polls/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">{{sentiment.thread_ts}}</a>
+    	{% else  %}  
+          {{sentiment.message.ts}}
+        {% endif %}  
+    </td>
+    <td border=1>{{sentiment.message.text}}</td>
+    <td border=1>{{sentiment.score}}</td>
+    <td border=1>{{sentiment.magnitude}}</td>
+</tr>    
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
