@@ -18,7 +18,8 @@ class SlackUtil:
      self.slack_token = os.environ['SLACK_TOKEN']
      print("slack token", self.slack_token)
      self.sc = SlackClient(self.slack_token)
-     conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],os.environ['ACCESS_KEY_ID'], os.environ['SECRET_ACCESS_KEY'])
+     kwargs = {'aws_access_key_id': os.environ['ACCESS_KEY_ID', 'aws_secret_access_key': os.environ['SECRET_ACCESS_KEY'}   
+     conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],**kwargs)
      bucket = conn.get_bucket('googleservicejson')
      keyBucket = Key(bucket,'service.json')
      keyBucket.get_contents_to_filename('/app/service.json')
