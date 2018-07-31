@@ -22,7 +22,7 @@ class SlackUtil:
      conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],**kwargs)
      bucket = conn.get_bucket('googleservicejson')
      keyBucket = Key(bucket,'service.json')
-     keyBucket.get_contents_to_filename('/app/service.json')
+     keyBucket.get_contents_to_filename(os.environ['GOOGLE_SERVICE'])
        
 
     def listChannels(self):

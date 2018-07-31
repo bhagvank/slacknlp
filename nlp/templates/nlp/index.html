@@ -1,4 +1,4 @@
-{% extends "polls/base.html" %}
+{% extends "nlp/base.html" %}
 {% block title %}Channels{% endblock %}
 
 {% block header %}
@@ -21,7 +21,7 @@
     </tr> 	
     {% for channel in channels %}
     <tr border=1>
-     <td border=1><a href="/polls/{{channel.id}}/">{{ channel.name }}</a></td> 
+     <td border=1><a href="/nlp/{{channel.id}}/">{{ channel.name }}</a></td> 
     </tr>  
 {% endfor %}
     </table>

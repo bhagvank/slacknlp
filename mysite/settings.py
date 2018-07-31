@@ -25,13 +25,13 @@ SECRET_KEY = '=_u)#r(9b*t6p(v29al6p2d=pg2+hf41_)=r+j^@eh!(nuciqk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['floating-crag-10115.herokuapp.com']
+ALLOWED_HOSTS = ['floating-crag-10115.herokuapp.com','localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
+    'nlp.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'PORT' : '3306',
+        'PORT' : '5432',
         'HOST' : 'localhost',
         'NAME' : 'django_development',
         'USER' : 'newuser',

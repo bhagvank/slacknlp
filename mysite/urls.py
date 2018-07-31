@@ -21,5 +21,5 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('polls/',include('polls.urls')),
+    path('nlp/',include('nlp.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

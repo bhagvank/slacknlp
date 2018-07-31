@@ -1,8 +1,8 @@
-{% extends "polls/base.html" %}
+{% extends "nlp/base.html" %}
 {% block title %}Messages{% endblock %}
 
 {% block header %}
-  <a class="active" href="/polls/">Home</a>
+  <a class="active" href="/nlp/">Home</a>
   <a href="javascript:history.go(-1)">Back</a>
   <BR>
   <BR>
@@ -25,7 +25,7 @@
     {% for message in messages %}
     <tr border=1>
      <td border=1>{{ message.text }}</td> 
-     <td border=1><a href="/polls/results/{{message.user}}/">{{ message.user }}</a></td>
+     <td border=1><a href="/nlp/results/{{message.user}}/">{{ message.user }}</a></td>
      <td border=1>{{ message.channel }}</td> 
     </tr>  
 {% endfor %}

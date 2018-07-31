@@ -1,9 +1,9 @@
-{% extends "polls/base.html" %}
+{% extends "nlp/base.html" %}
 {% block title %}Threads{% endblock %}
 
 {% block header %}
  
-  <a href="/polls/">Home</a>
+  <a href="/nlp/">Home</a>
   <a href="javascript:history.go(-1)">Back</a>
   <BR>
 <BR>
@@ -25,7 +25,7 @@
 
     <td border=1>
     	{% if sentiment.message.thread_ts == sentiment.message.ts %}
-    	  <a href="/polls/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">{{sentiment.thread_ts}}</a>
+    	  <a href="/nlp/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">{{sentiment.thread_ts}}</a>
     	{% else  %}  
           {{sentiment.message.ts}}
         {% endif %}  

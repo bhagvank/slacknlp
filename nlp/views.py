@@ -18,14 +18,14 @@ def index(request):
     slack = SlackUtil()
     channels = slack.listChannels()
     # messages = listMessages("CBR05AS5N")
-    template_name = 'polls/index.html'
+    template_name = 'nlp/index.html'
     context = {'channels': channels}
     # context_object_name = 'channels'
     return render(request, template_name, context)
 
 def detail(request, channel_id):
     #return HttpResponse("You're looking at question %s." % channel_id)
-       template_name = 'polls/detail.html'
+       template_name = 'nlp/detail.html'
        slack = SlackUtil()
        messages = slack.listMessages(channel_id)
        #print("messages in view", messages)
@@ -40,7 +40,7 @@ def detail(request, channel_id):
 
 def results(request, user_id):
 
-    template_name = 'polls/results.html'
+    template_name = 'nlp/results.html'
     slack = SlackUtil()
     channels = slack.listChannels()
     messages = {}
@@ -73,7 +73,7 @@ def threads(request, thread_id):
     split_path = full_path.split("=")
 
     channel_id = split_path[-1]
-    template_name = 'polls/threads.html'
+    template_name = 'nlp/threads.html'
     slack = SlackUtil()
     messages = slack.getRepliesByThreadId(channel_id,thread_id)
     
