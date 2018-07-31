@@ -18,8 +18,14 @@ from django.urls import path
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import url
+from django.views.generic.base import TemplateView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('nlp/',include('nlp.urls')),
+    url(r'^$', TemplateView.as_view(template_name='nlp/home.html'),
+        name='home'),
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
