@@ -5,7 +5,7 @@ Video content management, AI, Blockchain and Virtual/Augmented reality technolog
 
 AI based NLP engine scans and parses the messages from Slack. Slack is used for communicating new courses, mentor conversations, cohort groups, general discussions and other posting from students. NLP engine has the capability of identifying threads and conversations. This will help to know and analyse  the sentiments, tone, mood,emotions, utterances and other parameters  from the conversations. This will help in using the historical data about the students and their preferences to adapt the learning path and course content.   Adaptive Learning is used to change the ongoing content of materials and assessments  based on the educational goals. NLP engine helps in capturing time to mastery, completion rates, material reading complexity, language complexity and complexity of content topics. These areas are important for historical data which will be used for adaptive learning.
 
-#Instructions for setting up on heroku
+# Instructions for setting up on heroku
 
 
 
