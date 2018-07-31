@@ -5,6 +5,60 @@ Video content management, AI, Blockchain and Virtual/Augmented reality technolog
 
 AI based NLP engine scans and parses the messages from Slack. Slack is used for communicating new courses, mentor conversations, cohort groups, general discussions and other posting from students. NLP engine has the capability of identifying threads and conversations. This will help to know and analyse  the sentiments, tone, mood,emotions, utterances and other parameters  from the conversations. This will help in using the historical data about the students and their preferences to adapt the learning path and course content.   Adaptive Learning is used to change the ongoing content of materials and assessments  based on the educational goals. NLP engine helps in capturing time to mastery, completion rates, material reading complexity, language complexity and complexity of content topics. These areas are important for historical data which will be used for adaptive learning.
 
-Instructions for setting up on heroku
+#Instructions for setting up on heroku
+
+
+
+  
+  * Slack NLP
+## Prerequisites
+
+1. Ensure that postgres is installed, python3 and django for polls app - mysite folder.
+
+  * [Python3](https://www.python.org/downloads/)
+
+  * [Django](https://docs.djangoproject.com/en/2.0/topics/install/#installing-official-release)
+
+  * [Postgres](https://elements.heroku.com/addons/heroku-postgresql)
+  
+  * [Heroku](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
+
+2.git clone this repository
+```
+git clone https://github.com/bhagvank/slacknlp.git
+
+```
+
+3.create account on heroku
+```
+heroku login 
+
+heroku create
+
+git push heroku master
+
+heroku open
+```
+
+## Django Authentication - with Postgres
+
+1.Create user from the command line
+```
+heroku run python manage.py createsuperuser
+```
+
+3.run migrations
+```
+heroku run python manage.py migrate
+
+```
+4.run the server
+```
+heroku run python manage.py runserver
+```
+5. check the logs on heroku
+```
+heroku logs --tail
+```
 
 
