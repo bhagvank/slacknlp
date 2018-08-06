@@ -16,13 +16,13 @@ class SlackUtil:
 
      self.data = []
      self.slack_token = os.environ['SLACK_TOKEN']
-     print("slack token", self.slack_token)
      self.sc = SlackClient(self.slack_token)
-     kwargs = {'aws_access_key_id': os.environ['ACCESS_KEY_ID'], 'aws_secret_access_key': os.environ['SECRET_ACCESS_KEY']}   
-     conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],**kwargs)
-     bucket = conn.get_bucket('googleservicejson')
-     keyBucket = Key(bucket,'service.json')
-     keyBucket.get_contents_to_filename(os.environ['GOOGLE_SERVICE'])
+     #print("slack client", self.sc)
+     # kwargs = {'aws_access_key_id': os.environ['ACCESS_KEY_ID'], 'aws_secret_access_key': os.environ['SECRET_ACCESS_KEY']}   
+     # conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],**kwargs)
+     # bucket = conn.get_bucket('googleservicejson')
+     # keyBucket = Key(bucket,'service.json')
+     # keyBucket.get_contents_to_filename(os.environ['GOOGLE_SERVICE'])
        
 
     def listChannels(self):
@@ -31,6 +31,7 @@ class SlackUtil:
         "channels.list",
         exclude_archived=1
       )
+      print("listChannels",listChannels)
       channels = []
 
       for channel in listChannels["channels"]:
