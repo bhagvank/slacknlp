@@ -25,7 +25,7 @@ SECRET_KEY = '=_u)#r(9b*t6p(v29al6p2d=pg2+hf41_)=r+j^@eh!(nuciqk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['floating-crag-10115.herokuapp.com','localhost','https://limitless-shore-18823.herokuapp.com/']
+ALLOWED_HOSTS = ['floating-crag-10115.herokuapp.com','localhost','limitless-shore-18823.herokuapp.com/']
 
 
 # Application definition
