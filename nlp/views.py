@@ -17,7 +17,6 @@ def index(request):
     """
     slack = SlackUtil()
     channels = slack.listChannels()
-    #printf("channels", channels)
     # messages = listMessages("CBR05AS5N")
     template_name = 'nlp/index.html'
     context = {'channels': channels}

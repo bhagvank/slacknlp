@@ -3,81 +3,39 @@
 
 {% block header %}
  
- 
+  <a href="/nlp/">Home</a>
+  <a href="javascript:history.go(-1)">Back</a>
+  <BR>
+<BR>
   
 {% endblock %}
 
 {% block content %}
 
-{% if sentiments %} 
-<div class="bs-docs-section">
+<b>User Name: {{user}}</b>
 
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="page-header">
-              <h1 id="tables">User Name: {{user}}</h1>
-            </div>
+<table border=1>
+	<tr border=1>
+		<th> Thread</th>
+		<th> Message</th>
+		<th> Sentiment Score </th>
+		<th> Sentiment Magnitude</th>
+{% for sentiment in sentiments %}
+<tr border=1>
 
-            <div class="bs-component">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Thread</th>
-                    <th scope="col">Message</th>
-                    <th scope="col">Sentiment Score</th>
-                    <th scope="col">Sentiment Magnitude</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for sentiment in sentiments %} 
-
-                  <tr class="table-active">
-                    <td>
-                      {% if sentiment.message.thread_ts == sentiment.message.ts %}
-                     <a href="/nlp/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">  {{sentiment.thread_ts}}</a>
-                     {% else  %}  
-                     {{sentiment.message.ts}}
-                    {% endif %}
-                    </td>
-                    <td>{{sentiment.message.text}}</a></td>
-                    <td>{{sentiment.score}}</td>
-                    <td>{{sentiment.magnitude}}</td>
-                  </tr>
-                  {% endfor %}
-                  
-                  </tbody>
-              </table> 
-            </div><!-- /example -->
-          </div>
-        </div>
-      </div>
-   <div class="bs-docs-section">
-      <div class="col-lg-1">
-            <div class="bs-component">
-              <div>
-                <ul class="pagination">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#">&laquo;</a>
-                  </li>
-                  <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">&raquo;</a>
-                  </li>
-                </ul>
-              </div>
-      </div>
-    </div>
-{% else %}
-    <p>No Sentiments are available.</p>
-{% endif %}
-<b></b>
-
-
-{% endblock %}
-{% block footer %}
-
+    <td border=1>
+    	{% if sentiment.message.thread_ts == sentiment.message.ts %}
+    	  <a href="/nlp/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">{{sentiment.thread_ts}}</a>
+    	{% else  %}  
+          {{sentiment.message.ts}}
+        {% endif %}  
+    </td>
+    <td border=1>{{sentiment.message.text}}</td>
+    <td border=1>{{sentiment.score}}</td>
+    <td border=1>{{sentiment.magnitude}}</td>
+</tr>    
+{% endfor %}
+</table>
 {% endblock %}
 
 
