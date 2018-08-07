@@ -26,7 +26,7 @@
                 <tbody>
                   {% for sentiment in sentiments %} 
 
-                  <tr class="table-primary">
+                  <tr class="table-light">
                     <td>
                       {% if sentiment.message.thread_ts == sentiment.message.ts %}
                      <a href="/nlp/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">  {{sentiment.thread_ts}}</a>
