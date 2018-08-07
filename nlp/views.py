@@ -59,7 +59,7 @@ def results(request, user_id):
     for threadkey,threadMessage in threadMessages.items():
         for messageKey,message in threadMessage.items():
             userSpecificMessages.update({threadkey:message})
-    print("in results userspecific",userSpecificMessages)
+    #print("in results userspecific",userSpecificMessages)
     sentiments = nlp.analyseContentSentiment(userSpecificMessages)
     #print("in results",sentiments)
     user_name = slack.getUserById(user_id)

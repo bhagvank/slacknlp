@@ -31,7 +31,7 @@ class SlackUtil:
         "channels.list",
         exclude_archived=1
       )
-      print("listChannels",listChannels)
+      #print("listChannels",listChannels)
       channels = []
 
       for channel in listChannels["channels"]:

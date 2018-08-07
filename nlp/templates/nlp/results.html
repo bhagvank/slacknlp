@@ -1,11 +1,6 @@
 {% extends "nlp/base.html" %}
 {% block title %}Threads{% endblock %}
 
-{% block header %}
- 
- 
-  
-{% endblock %}
 
 {% block content %}
 
@@ -39,7 +34,7 @@
                      {{sentiment.message.ts}}
                     {% endif %}
                     </td>
-                    <td>{{sentiment.message.text}}</a></td>
+                    <td>{{sentiment.message.text}}</td>
                     <td>{{sentiment.score}}</td>
                     <td>{{sentiment.magnitude}}</td>
                   </tr>
@@ -47,7 +42,7 @@
                   
                   </tbody>
               </table> 
-            </div><!-- /example -->
+            </div>
           </div>
         </div>
       </div>
@@ -72,13 +67,9 @@
 {% else %}
     <p>No Sentiments are available.</p>
 {% endif %}
-<b></b>
-
 
 {% endblock %}
-{% block footer %}
 
-{% endblock %}
 
 
 

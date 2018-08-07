@@ -6,13 +6,11 @@
  
 {% if channels %}  
 <div class="bs-docs-section">
-
         <div class="row">
           <div class="col-lg-12">
             <div class="page-header">
               <h1 id="tables">Channels</h1>
             </div>
-
             <div class="bs-component">
               <table class="table table-hover">
                 <thead>
@@ -22,12 +20,10 @@
                 </thead>
                 <tbody>
                   {% for channel in channels %}  
-
                   <tr class="table-active">
-                    <td><a href="/nlp/{{channel.id}}/">{{ channel.name }</td>
+                    <td><a href="/nlp/{{channel.id}}/">{{ channel.name }}</a></td>
                   </tr>
                   {% endfor %}
-                  
                   </tbody>
               </table> 
             </div><!-- /example -->

@@ -1,10 +1,6 @@
 {% extends "nlp/base.html" %}
 {% block title %}Thread - Replies{% endblock %}
 
-{% block header %}
- 
-  
-{% endblock %}
 
 {% block content %}
 
@@ -61,10 +57,8 @@
               </div>
       </div>
     </div>
-
-
-{% endblock %}
-
-{% block footer %}
+{% else %}
+    <p>No Sentiments are available.</p>
+{% endif %}
 
 {% endblock %}

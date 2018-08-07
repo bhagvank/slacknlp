@@ -60,7 +60,8 @@ pre {
 }
 
 .bs-docs-section {
-    margin-top: 4em
+    /*margin-top: 1em*/
+     /* margin-left: 6em*/
 }
 
 .bs-docs-section .page-header h1 {
@@ -140,10 +141,10 @@ pre {
 #content
 {
     padding: 10px;
-    margin-top: 5.5em;
+    /*margin-top: 5.5em;*/
     margin-left: 15.5em;
     padding: 10px;
-    white-space: pre;
+    /*white-space: pre;*/
     /*position: absolute;
     top: 50%;
     left: 50%;
@@ -164,7 +165,7 @@ pre {
 
 #footer li {
     float: left;
-    margin-left: 15.5em;
+    /*margin-left: 15.5em;*/
     margin-right: 1.5em;
     margin-bottom: 1.5em
 }
