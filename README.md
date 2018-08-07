@@ -32,7 +32,7 @@ git clone https://github.com/bhagvank/slacknlp.git
 3. create slack api token and google service accounts
 
    * [Slack](https://api.slack.com/custom-integrations/legacy-tokens)
-   * [Google] https://cloud.google.com/compute/docs/access/service-accounts
+   * [Google](https://cloud.google.com/compute/docs/access/service-accounts)
 
 4.create account on heroku
 ```
