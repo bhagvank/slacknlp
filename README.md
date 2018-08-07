@@ -47,8 +47,9 @@ heroku open
 
 5. updated config vars on Heroku and upload service.json to S3
 
-  *[Heroku](https://devcenter.heroku.com/articles/config-vars)
-  *[AmazonS3](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html)
+  * [Heroku](https://devcenter.heroku.com/articles/config-vars)
+  * [AmazonS3](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html)
+  
 ## Slack NLP  - with Postgres
 
 1.Create user from the command line
