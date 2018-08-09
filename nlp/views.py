@@ -6,15 +6,104 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.template import loader
-from .models import Question, Choice
+from .models import SlackUser
 from .slackutils import SlackUtil
 from .NLPUtils import NLPUtil
+
+def login(request):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("channels", channels)
+    # messages = listMessages("CBR05AS5N")
+    template_name = 'nlp/login.html'
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name)
+
+def authenticate(request):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("channels", channels)
+    # messages = listMessages("CBR05AS5N")
+    username = request.POST['useremail']
+    password = request.POST['password']
+
+    user = get_object_or_404(SlackUser, username=username)
+
+    if user.authenticate(username,password):
+
+       template_name = 'nlp/main.html'
+    else :
+    
+       template_name = 'nlp/login.html'   
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name)    
+
+
+def main(request):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("channels", channels)
+    # messages = listMessages("CBR05AS5N")
+    template_name = 'nlp/main.html'
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name)    
+
+def signup(request):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+
+    template_name = 'nlp/signup.html'
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name)    
+
+def signin(request):
+    """
+    Return the last five published questions (not including those set to be
+    published in the future).
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("signup")
+    # messages = listMessages("CBR05AS5N")
+    username = request.POST['useremail']
+    password = request.POST['password']
+    confirmPassword = request.POST['confirmPassword']
+    print("password, confirmPassword",password,confirmPassword)
+
+    if password == confirmPassword:
+       user = SlackUser(username=username,password=password)
+       user.save()   
+       template_name = 'nlp/login.html'
+    else :
+       template_name = 'nlp/signup.html'   
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name) 
 
 def index(request):
     """
     Return the last five published questions (not including those set to be
     published in the future).
     """
+    print("index")
     slack = SlackUtil()
     channels = slack.listChannels()
     #printf("channels", channels)

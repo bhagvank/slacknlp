@@ -7,10 +7,13 @@
 <title>{% block title %}Slack NLP{% endblock %}</title>
 
 </head>
+
 <body>
 
-    {% block header %}
-    <div class="container">
+
+
+{% block header %}
+<div class="container">
 
       <div class="page-header" id="banner">
         <div class="row">
@@ -34,56 +37,56 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarColor01">
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                      <a class="nav-link" href="/nlp/index">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="javascript:history.go(-1)">Back</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/nlp">Sign Out</a>
+                      <a class="nav-link" href="signup">SignUp <span class="sr-only">(current)</span></a>
                     </li>
                   </ul>
-                  <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                  </form>
                 </div>
-              </nav>
+              </nav>   
+
+
     </div>
   </div>
 
-   
-    {% endblock %}
 
+{% endblock %}
 
-   {% block content %}
-   
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-      
-    {% endblock %}
+{% block content %}
 
-
-    {% block footer %}
-    <footer id="footer">
+<div class="bs-docs-section">
         <div class="row">
           <div class="col-lg-12">
-            <ul class="list-unstyled">
-              <li><a href="#top">Back to top</a></li>
-              <li><a href="https://github.com/bhagvank/slacknlp">GitHub</a></li>
-              <li><a href="../help/#api">API</a></li>
-              <li><a href="../help/#donate">Donate</a></li>
-            </ul>
-
+            <div class="page-header">
+              <h1 id="forms">Login</h1>
+            </div>
           </div>
         </div>
 
-     </footer> 
-    
-    {% endblock %}
-</div> 
-</body>
-</html>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="bs-component">
+              <form action="/nlp/authenticate/" method="post">
+                {% csrf_token %}
+                <fieldset>
+                  <div class="form-group">
+                    <label for="useremail">Email address</label>
+                    <input type="email" class="form-control" id="useremail" name="useremail" aria-describedby="emailHelp" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </fieldset>
+            </form>
+           </div>
+         </div>
+       </div>
+</div>       
+                  
+ {% endblock %}  
+</div>
+ </body>
+ </html>               

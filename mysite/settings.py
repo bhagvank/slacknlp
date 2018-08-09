@@ -25,7 +25,22 @@ SECRET_KEY = '=_u)#r(9b*t6p(v29al6p2d=pg2+hf41_)=r+j^@eh!(nuciqk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['floating-crag-10115.herokuapp.com','localhost','limitless-shore-18823.herokuapp.com']
+# Allow all host hosts/domain names for this site
+ALLOWED_HOSTS = ['*']
+
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+
+DATABASES = { 'default' : dj_database_url.config()}
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# try to load local_settings.py if it exists
+try:
+  from local_settings import *
+except Exception as e:
+  pass
 
 
 # Application definition
@@ -75,15 +90,20 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'PORT' : '5432',
-        'HOST' : 'localhost',
-        'NAME' : 'django_development',
-        'USER' : 'newuser',
-        'PASSWORD' : 'newuser' 
-               }
-            }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'PORT' : '5432',
+#        'HOST' : 'localhost',
+#        'NAME' : 'django_development',
+#        'USER' : 'newuser',
+#        'PASSWORD' : 'newuser' 
+#               }
+#            }
 
 
 # Password validation

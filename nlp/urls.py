@@ -7,10 +7,16 @@ from . import views
 urlpatterns = [
    
     #path('', views.IndexView.as_view(), name='index'),
-    path('', views.index, name='index'), 
-    path('<channel_id>/', views.detail, name='detail'), 
+    path('', views.login, name='login'),
+    path('authenticate/', views.authenticate, name='authenticate'), 
+    path('signin/', views.signin, name='signin'),
+    path('main/', views.main, name='main'), 
+    path('index/', views.index, name='index'), 
+    path('channel/<channel_id>/', views.detail, name='detail'), 
     path('results/<user_id>/', views.results, name='results'),
-    path('threads/<thread_id>/', views.threads, name='threads'),  
+    path('threads/<thread_id>/', views.threads, name='threads'),
+    path('signup/', views.signup, name='signup'), 
+
     # ex: /polls/5/
     #path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     #path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
