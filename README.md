@@ -29,7 +29,12 @@ git clone https://github.com/bhagvank/slacknlp.git
 
 ```
 
-3.create account on heroku
+3. create slack api token and google service accounts
+
+   * [Slack](https://api.slack.com/custom-integrations/legacy-tokens)
+   * [Google](https://cloud.google.com/compute/docs/access/service-accounts)
+
+4.create account on heroku
 ```
 heroku login 
 
@@ -40,7 +45,12 @@ git push heroku master
 heroku open
 ```
 
-## Django Authentication - with Postgres
+5. updated config vars on Heroku and upload service.json to S3
+
+  * [Heroku](https://devcenter.heroku.com/articles/config-vars)
+  * [AmazonS3](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html)
+  
+## Slack NLP  - with Postgres
 
 1.Create user from the command line
 ```
