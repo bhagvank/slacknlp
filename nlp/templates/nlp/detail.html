@@ -28,7 +28,11 @@
 
                   <tr class="table-light">
                     <th scope="row">{{ message.text }}</th>
-                    <td><a href="/nlp/results/{{message.user}}/">{{ message.user }}</a></td>
+                    {% if message.profile %}
+                       <td><a href="/nlp/results/{{message.user}}/">{{ message.profile }}</a></td>
+                    {% else %}
+                       <td><a href="/nlp/results/{{message.user}}/">{{ message.user }}</a></td>
+                    {% endif %}   
                     <td>{{ message.channel }}</td>
                   </tr>
                   {% endfor %}

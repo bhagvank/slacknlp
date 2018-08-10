@@ -53,6 +53,8 @@ class SlackUtil:
         #print("messagesList",messagesList)
         messages = {}
 
+        profiles = {}
+
         for message in messagesList["messages"]:
 
             channelMessage = {}
@@ -62,8 +64,16 @@ class SlackUtil:
             #print("channel Message", channelMessage)
             if "user" in message:
                 channelMessage["user"] = message['user']
+                if message['user'] in profiles:
+                   channelMessage['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   channelMessage["profile"] = profiles[message['user']]
             if "username" in message:
                 channelMessage["user"] = message['username']
+                
+
+                  
 
             if "thread_ts" in message:
                 channelMessage["thread_ts"] = message['thread_ts']
@@ -75,6 +85,9 @@ class SlackUtil:
             if "bot_id"  in message:
                 channelMessage["id"] = message['bot_id']
                 messages.update({message['bot_id']: channelMessage}) 
+
+                
+
         #print("channelMessages", messages)
 
         return messages
@@ -152,9 +165,16 @@ class SlackUtil:
         
         messages = threadMessages["messages"]
         threadSpecificMessages = []
+        profiles = {}
         for message in messages:
             if not "reply_count" in message:
                threadSpecificMessages.append(message)
+               if "user" in message:
+                if message['user'] in profiles:
+                   message['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   message["profile"] = profiles[message['user']]
         return threadSpecificMessages
 
 
