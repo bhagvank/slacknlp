@@ -123,37 +123,53 @@ def detail(request, channel_id):
        for key,value in messages.items():
            channelMessage = value
            channelMessages.append(channelMessage)
-       channel_name = slack.getChannelById(channel_id)    
+       channel_name = slack.getChannelById(channel_id)
+
+
        context = {'messages': channelMessages,
-                   'channel': channel_name}
+                   'channel': channel_name,
+                   'channel_id': channel_id}
        return render(request, template_name, context)
 
 def results(request, user_id):
 
+    full_path = request.get_full_path()
+    split_path = full_path.split("=")
+
+    channel_id = split_path[-1]
+
     template_name = 'nlp/results.html'
     slack = SlackUtil()
-    channels = slack.listChannels()
-    messages = {}
-    for channel in channels:
+    #messages= {}
+    messages = slack.getMessagesByUser(channel_id,user_id)
+    channel_name = slack.getChannelById(channel_id)
+    #channels = slack.listChannels()
+    #messages = {}
+    #for channel in channels:
         #print("channel in view",channel)
-        channelMessages = slack.listMessages(channel["id"])
-        messages.update({channel["id"]:channelMessages})
+    #   channelMessages = slack.listMessages(channel["id"])
+    #    messages.update({channel["id"]:channelMessages})
     #print("in results", messages)    
-    userMessages = slack.groupThreadMessagesByUser(messages)
+    threadMessages = slack.groupThreadMessagesByUser(messages)
     #print("in results userMessages", userMessages)
     nlp = NLPUtil()
-    userSpecificMessages = {}
+    #userSpecificMessages = {}
     #for key,value in userMessages.items():
-    threadMessages = userMessages[user_id]
-    for threadkey,threadMessage in threadMessages.items():
-        for messageKey,message in threadMessage.items():
-            userSpecificMessages.update({threadkey:message})
+    #threadMessages = userMessages[user_id]
+    #for threadkey,threadMessage in threadMessages.items():
+    #    for messageKey,message in threadMessage.items():
+    #        userSpecificMessages.update({threadkey:message})
     #print("in results userspecific",userSpecificMessages)
-    sentiments = nlp.analyseContentSentiment(userSpecificMessages)
+    allMessages = {}
+    for key,threadMessage in threadMessages.items():
+        for messagekey, message in threadMessage.items():
+            allMessages.update({messagekey:message})
+    sentiments = nlp.analyseContentSentiment(allMessages)
     #print("in results",sentiments)
     user_name = slack.getUserById(user_id)
     context = {'sentiments': sentiments,
-               'user': user_name
+               'user': user_name,
+               'channel': channel_name
                }
     return render(request, template_name, context)
 
@@ -175,9 +191,12 @@ def threads(request, thread_id):
     
     #print("in threads userspecific",threadMessages)
     sentiments = nlp.analyseContentSentiment(threadMessages)
+
+    channel = slack.getChannelById(channel_id)
     #print("in results",sentiments)
     context = {'sentiments': sentiments,
-               'thread': thread_id
+               'thread': thread_id,
+                'channel_id': channel
                }
     return render(request, template_name, context)
 # def vote(request, question_id):

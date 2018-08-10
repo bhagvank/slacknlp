@@ -55,11 +55,16 @@ class SlackUtil:
 
         profiles = {}
 
+        #channels = {}
+
+        channel = self.getChannelById(channelCode)
+
         for message in messagesList["messages"]:
 
             channelMessage = {}
             channelMessage["text"] = message['text']
-            channelMessage["channel"] = channelCode
+            channelMessage["channel_id"] = channelCode
+            channelMessage["channel"] = channel
             
             #print("channel Message", channelMessage)
             if "user" in message:
@@ -92,47 +97,109 @@ class SlackUtil:
 
         return messages
 
+    def getMessagesByUser(self, channelCode,user_id):
+
+        messagesList = self.sc.api_call(
+            "conversations.history",
+            channel=channelCode,
+            limit=100
+        )
+        #print("messagesList",messagesList)
+        messages = {}
+
+        profiles = {}
+
+        #channels = {}
+
+        channel = self.getChannelById(channelCode)
+
+        for message in messagesList["messages"]:
+
+            channelMessage = {}
+            channelMessage["text"] = message['text']
+            channelMessage["channel_id"] = channelCode
+            channelMessage["channel"] = channel
+            
+            #print("channel Message", channelMessage)
+            if "user" in message:
+                channelMessage["user"] = message['user']
+                if message['user'] in profiles:
+                   channelMessage['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   channelMessage["profile"] = profiles[message['user']]
+            if "username" in message:
+                channelMessage["user"] = message['username']
+                
+
+                  
+
+            if "thread_ts" in message:
+                channelMessage["thread_ts"] = message['thread_ts']
+            if "ts" in message:
+                channelMessage["ts"] = message["ts"]
+
+            if channelMessage['user'] == user_id:
+
+               if "client_msg_id" in message:
+                  channelMessage["id"] = message['client_msg_id']    
+                  messages.update({message['client_msg_id']: channelMessage})
+               if "bot_id"  in message:
+                  channelMessage["id"] = message['bot_id']
+                  messages.update({message['bot_id']: channelMessage}) 
+
+                
+
+        #print("channelMessages", messages)
+
+        return messages
 
 
     def groupThreadMessagesByUser(self, messages):
 
-        users = []
+        #users = []
         threads = []
         allmessages = []
-        for key,value in messages.items():
+        channels = {}
 
-            channelMessages = value
-            for key,value in channelMessages.items():
-                message = value
-                allmessages.append(message)
+        for key,value in messages.items():
+            #channel = key
+            message = value
+            #message["channel_id"] = channel
+            #if channel in channels:
+            #   message["channel"] = channels[channel]
+            #else:
+            #   channels[channel] = self.getChannelById(channel)
+            #message["channel"] = channels[channel]
+            allmessages.append(message)
                 #print("message in grouping thread", message)
-                users.append(message["user"])
-                if "thread_ts" in message:
-                    threads.append(message["thread_ts"])
-                else:
-                    threads.append(message["ts"])
+            #users.append(message["user"])
+            if "thread_ts" in message:
+                threads.append(message["thread_ts"])
+            else:
+                threads.append(message["ts"])
                     
-        userset = set(users)
+        #userset = set(users)
         threadset = set(threads)
 
-        userMessages = {}
+        #userMessages = {}
         threadMessages = {}
-        for user in userset:
-            userMessages[user] = {}
-            for thread in threadset:
+        #for user in userset:
+        #    userMessages[user] = {}
+        for thread in threadset:
 
-                threadMessages[thread] = {}
-                for message in allmessages:
+            threadMessages[thread] = {}
+            for message in allmessages:
 
-                    if "thread_ts" in message:
-                       if message["user"] == user and message["thread_ts"] == thread:
-                          threadMessages[thread].update({message["id"]: message})
-                    if "ts" in message:
-                       if message["user"] == user and message["ts"] == thread:
-                           threadMessages[thread].update({message["id"]: message})
-                userMessages[user].update({thread:threadMessages[thread]})
+                if "thread_ts" in message:
+                    if message["thread_ts"] == thread:
+                       threadMessages[thread].update({message["id"]: message})
+                if "ts" in message:
+                   if message["ts"] == thread:
+                      threadMessages[thread].update({message["id"]: message})
+                #userMessages[user].update({thread:threadMessages[thread]})
 
-        return userMessages
+        return threadMessages
 
     def getUserById(self,user_id):
         user = self.sc.api_call(

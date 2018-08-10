@@ -10,13 +10,14 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="page-header">
-              <h1 id="tables">User Name: {{user}}</h1>
+              <h2 id="tables">{{channel}}- User Name: {{user}}</h2>
             </div>
 
             <div class="bs-component">
               <table class="table table-hover">
                 <thead>
                   <tr>
+                    
                     <th scope="col">Thread</th>
                     <th scope="col">Message</th>
                     <th scope="col">Sentiment Score</th>
@@ -27,9 +28,10 @@
                   {% for sentiment in sentiments %} 
 
                   <tr class="table-light">
+                    
                     <td>
                       {% if sentiment.message.thread_ts == sentiment.message.ts %}
-                     <a href="/nlp/threads/{{sentiment.thread_ts}}?channel_id={{sentiment.message.channel}}">  {{sentiment.thread_ts}}</a>
+                     <a href="/nlp/threads/{{sentiment.message.thread_ts}}?channel_id={{sentiment.message.channel_id}}">  {{sentiment.message.thread_ts}}</a>
                      {% else  %}  
                      {{sentiment.message.ts}}
                     {% endif %}

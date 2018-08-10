@@ -36,7 +36,7 @@ class NLPUtil:
              document=document, encoding_type='UTF8',)
             sentiment = response.document_sentiment
             userMessage = {}
-            userMessage["thread_ts"] = key
+            #userMessage["thread_ts"] = key
             userMessage["message"] = message
             userMessage["score"] = sentiment.score
             userMessage["magnitude"] = sentiment.magnitude
