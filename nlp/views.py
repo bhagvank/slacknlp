@@ -12,8 +12,17 @@ from .NLPUtils import NLPUtil
 
 def login(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    login page call
+
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
     #slack = SlackUtil()
     #channels = slack.listChannels()
@@ -26,8 +35,16 @@ def login(request):
 
 def authenticate(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    page authentication
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
     #slack = SlackUtil()
     #channels = slack.listChannels()
@@ -51,8 +68,17 @@ def authenticate(request):
 
 def main(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    main page call
+
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
     #slack = SlackUtil()
     #channels = slack.listChannels()
@@ -65,8 +91,16 @@ def main(request):
 
 def signup(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    sign up page call
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
 
     template_name = 'nlp/signup.html'
@@ -76,8 +110,16 @@ def signup(request):
 
 def signin(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    sign in - sign up processing
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
     #slack = SlackUtil()
     #channels = slack.listChannels()
@@ -100,8 +142,17 @@ def signin(request):
 
 def index(request):
     """
-    Return the last five published questions (not including those set to be
-    published in the future).
+    index page
+
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
     """
     print("index")
     slack = SlackUtil()
@@ -114,7 +165,21 @@ def index(request):
     return render(request, template_name, context)
 
 def detail(request, channel_id):
-    #return HttpResponse("You're looking at question %s." % channel_id)
+       """
+          detail page
+         Parameters
+         ----------
+         request : HttpRequest
+         request object
+
+         Returns
+          -----------
+         HttpResponse
+        content is the result of render method  
+
+       """    
+
+       #return HttpResponse("You're looking at question %s." % channel_id)
        template_name = 'nlp/detail.html'
        slack = SlackUtil()
        messages = slack.listMessages(channel_id)
@@ -132,7 +197,18 @@ def detail(request, channel_id):
        return render(request, template_name, context)
 
 def results(request, user_id):
+    """
+    results page
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
 
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
+    """
     full_path = request.get_full_path()
     split_path = full_path.split("=")
 
@@ -150,7 +226,7 @@ def results(request, user_id):
     #   channelMessages = slack.listMessages(channel["id"])
     #    messages.update({channel["id"]:channelMessages})
     #print("in results", messages)    
-    threadMessages = slack.groupThreadMessagesByUser(messages)
+    #allMessages = slack.groupThreadMessagesByUser(messages)
     #print("in results userMessages", userMessages)
     nlp = NLPUtil()
     #userSpecificMessages = {}
@@ -160,11 +236,11 @@ def results(request, user_id):
     #    for messageKey,message in threadMessage.items():
     #        userSpecificMessages.update({threadkey:message})
     #print("in results userspecific",userSpecificMessages)
-    allMessages = {}
-    for key,threadMessage in threadMessages.items():
-        for messagekey, message in threadMessage.items():
-            allMessages.update({messagekey:message})
-    sentiments = nlp.analyseContentSentiment(allMessages)
+    #allMessages = {}
+    #for key,threadMessage in threadMessages.items():
+    #    for messagekey, message in threadMessage.items():
+    #        allMessages.update({messagekey:message})
+    sentiments = nlp.analyseContentSentiment(messages)
     #print("in results",sentiments)
     user_name = slack.getUserById(user_id)
     context = {'sentiments': sentiments,
@@ -174,6 +250,18 @@ def results(request, user_id):
     return render(request, template_name, context)
 
 def threads(request, thread_id):
+    """
+    threads page
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
+    """    
 
     full_path = request.get_full_path()
     split_path = full_path.split("=")
@@ -183,14 +271,14 @@ def threads(request, thread_id):
     slack = SlackUtil()
     messages = slack.getRepliesByThreadId(channel_id,thread_id)
     
-    threadMessages = {}
-    for message in messages:
-        threadMessages[message["ts"]]= message
+    #threadMessages = {}
+    #for message in messages:
+    #    threadMessages[message["ts"]]= message
 
     nlp = NLPUtil()
     
     #print("in threads userspecific",threadMessages)
-    sentiments = nlp.analyseContentSentiment(threadMessages)
+    sentiments = nlp.analyseContentSentiment(messages)
 
     channel = slack.getChannelById(channel_id)
     #print("in results",sentiments)
@@ -199,25 +287,3 @@ def threads(request, thread_id):
                 'channel_id': channel
                }
     return render(request, template_name, context)
-# def vote(request, question_id):
-#     return HttpResponse("You're voting on question %s." % question_id)
-
-# def detail(request, channel_id):
-#      template = 'polls/detail.html'
-#      slack = SlackUtil()
-#      messages = slack.listMessages(channel_id)
-#      context = {'messages': messages}
-#      return render(request, template_name, context)
-
-
-# def results(request, user_id):
-#     template = 'polls/results.html'
-# # context_object_name = 'messages'
-#     slack = SlackUtil()
-#     userMessages = slack.groupThreadMessagesByUser(user_id)
-#.    nlp = NLPUtil()
-#.    messages = nlp.analyzeContentSentiment(userMessages)
-#     context = {'messages': messages,
-#                  'user':user_id}
-
-#     return render(request, template_name, context)

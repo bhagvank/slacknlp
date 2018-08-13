@@ -9,10 +9,19 @@ from boto.s3.key import Key
 
 
 class SlackUtil:
+    """
+    This is the class for slack api calls
 
+    """
     
 
     def __init__(self):
+     """"
+     non parameterized constructor
+
+     accessing S3 bucket and retrieving google service json file
+
+     """ 
 
      self.data = []
      self.slack_token = os.environ['SLACK_TOKEN']
@@ -26,6 +35,15 @@ class SlackUtil:
        
 
     def listChannels(self):
+      """
+       return list of channels 
+
+       Returns
+       -------
+       list 
+         the list of channels
+
+      """
 
       listChannels = self.sc.api_call(
         "channels.list",
@@ -44,6 +62,18 @@ class SlackUtil:
       return channels
 
     def listMessages(self, channelCode):
+        """
+        return list of messages given  channelCode
+        Parameters
+        -----------
+        channelCode : str
+             the channel code
+        Returns
+        -------
+        list
+          the list of messages in the channel
+
+        """
 
         messagesList = self.sc.api_call(
             "conversations.history",
@@ -98,6 +128,21 @@ class SlackUtil:
         return messages
 
     def getMessagesByUser(self, channelCode,user_id):
+        """"
+        return messages given user_id and channel code
+
+        Parameters
+        -------
+        channelCode : str
+             the channel code
+        user_id : str
+             user id 
+
+        Returns
+        -------
+        list
+           list of user messages in the channel         
+        """
 
         messagesList = self.sc.api_call(
             "conversations.history",
@@ -155,53 +200,23 @@ class SlackUtil:
         return messages
 
 
-    def groupThreadMessagesByUser(self, messages):
-
-        #users = []
-        threads = []
-        allmessages = []
-        channels = {}
-
-        for key,value in messages.items():
-            #channel = key
-            message = value
-            #message["channel_id"] = channel
-            #if channel in channels:
-            #   message["channel"] = channels[channel]
-            #else:
-            #   channels[channel] = self.getChannelById(channel)
-            #message["channel"] = channels[channel]
-            allmessages.append(message)
-                #print("message in grouping thread", message)
-            #users.append(message["user"])
-            if "thread_ts" in message:
-                threads.append(message["thread_ts"])
-            else:
-                threads.append(message["ts"])
-                    
-        #userset = set(users)
-        threadset = set(threads)
-
-        #userMessages = {}
-        threadMessages = {}
-        #for user in userset:
-        #    userMessages[user] = {}
-        for thread in threadset:
-
-            threadMessages[thread] = {}
-            for message in allmessages:
-
-                if "thread_ts" in message:
-                    if message["thread_ts"] == thread:
-                       threadMessages[thread].update({message["id"]: message})
-                if "ts" in message:
-                   if message["ts"] == thread:
-                      threadMessages[thread].update({message["id"]: message})
-                #userMessages[user].update({thread:threadMessages[thread]})
-
-        return threadMessages
+    
 
     def getUserById(self,user_id):
+        """"
+         returns the user name given user_iod
+
+         Parameters
+         -----------
+         user_id : str
+           user id 
+
+        Returns
+        -----------
+         str
+            username   
+
+        """
         user = self.sc.api_call(
             "users.profile.get",
             user=user_id,
@@ -213,6 +228,18 @@ class SlackUtil:
         return user_name
 
     def getChannelById(self, channel_id):
+        """
+         returns the channel name given channel id
+         Parameters
+         ---------
+         channel_id : str
+             channel id
+
+         Returns
+         ------
+         str
+            channel_name    
+        """
         channel = self.sc.api_call(
         "channels.info",
         channel=channel_id
@@ -222,6 +249,22 @@ class SlackUtil:
         return channel_name
 
     def getRepliesByThreadId(self,channel_id,thread_id):
+        """"
+         returns the replies given the thread id.
+
+         Parameters
+         ----------
+         channel_id : str
+              channel_id
+         thread_id : str
+              thread_id
+
+         Returns
+         ------
+         list
+           list of messages           
+
+        """
 
         threadMessages = self.sc.api_call(
         "conversations.replies",
@@ -231,11 +274,15 @@ class SlackUtil:
         ) 
         
         messages = threadMessages["messages"]
-        threadSpecificMessages = []
+        threadSpecificMessages = {}
         profiles = {}
         for message in messages:
+            if "client_msg_id" in message:
+                  message["id"] = message['client_msg_id']    
+            if "bot_id"  in message:
+                  message["id"] = message['bot_id']
             if not "reply_count" in message:
-               threadSpecificMessages.append(message)
+               threadSpecificMessages.update({message['id']:message})
                if "user" in message:
                 if message['user'] in profiles:
                    message['profile'] = profiles[message['user']]

@@ -9,13 +9,34 @@ import os
 import json
 
 class NLPUtil:
+    """
+
+     class for Google NLP API calls
+
+    """
 
     def __init__(self):
+        """
+         non-parameterized constructor
+
+        """
 
         self.data = []
 
 
     def analyseContentSentiment(self, messages):
+        """
+         analysing content sentiments given messages as parameter
+        Parameters
+        ----------
+         messages : dictionary
+
+        Returns
+        ----------
+         list
+           list of message sentiments 
+
+        """
         #s3 = S3Connection(os.environ['ACCESS_KEY_ID'], os.environ['SECRET_ACCESS_KEY'])
         #s3.Bucket('googleservicejson').download_file('/app/service.json', 'service.json')
         credentials = service_account.Credentials.from_service_account_file(os.environ['GOOGLE_SERVICE']
