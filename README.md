@@ -32,7 +32,7 @@ git clone https://github.com/bhagvank/slacknlp.git
    
 4. run locally using settings
 ```
-python3 manage.py runserver --settings=mysite.run_settings
+python manage.py runserver --settings=mysite.run_settings
 
 ```
   
