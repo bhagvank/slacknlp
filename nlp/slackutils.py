@@ -32,7 +32,38 @@ class SlackUtil:
      bucket = conn.get_bucket('googleservicejson')
      keyBucket = Key(bucket,'service.json')
      keyBucket.get_contents_to_filename(os.environ['GOOGLE_SERVICE'])
-       
+    
+
+    def listChannelsPage(self,nextCursor,count):
+      """
+       return list of channels 
+
+       Returns
+       -------
+       list 
+         the list of channels
+
+      """
+
+      listChannels = self.sc.api_call(
+        "channels.list",
+        cursor=nextCursor,
+        limit=count,
+        exclude_archived=1)
+      #print("listChannels",listChannels)
+
+      nextCursor = listChannels["response_metadata"]["next_cursor"]
+      channels = []
+
+      for channel in listChannels["channels"]:
+
+        slackChannel = {}
+        slackChannel["name"] = channel["name"]
+        slackChannel["id"] = channel["id"]
+        channels.append(slackChannel)
+      #print(channels)  
+      return channels,nextCursor
+
 
     def listChannels(self):
       """
@@ -60,6 +91,79 @@ class SlackUtil:
         channels.append(slackChannel)
       #print(channels)  
       return channels
+
+    def listMessagesPage(self, channelCode,nextCursor,count):
+        """
+        return list of messages given  channelCode
+        Parameters
+        -----------
+        channelCode : str
+             the channel code
+        Returns
+        -------
+        list
+          the list of messages in the channel
+
+        """
+
+        messagesList = self.sc.api_call(
+            "conversations.history",
+            channel=channelCode,
+            cursor=nextCursor,
+            limit=count
+        )
+        #print("messagesList",messagesList)
+        nextCursor = None
+
+        if "response_metadata" in messagesList:
+            nextCursor = messagesList["response_metadata"]["next_cursor"]
+
+        messages = {}
+
+        profiles = {}
+
+        #channels = {}
+
+        channel = self.getChannelById(channelCode)
+
+        for message in messagesList["messages"]:
+
+            channelMessage = {}
+            channelMessage["text"] = message['text']
+            channelMessage["channel_id"] = channelCode
+            channelMessage["channel"] = channel
+            
+            #print("channel Message", channelMessage)
+            if "user" in message:
+                channelMessage["user"] = message['user']
+                if message['user'] in profiles:
+                   channelMessage['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   channelMessage["profile"] = profiles[message['user']]
+            if "username" in message:
+                channelMessage["user"] = message['username']
+                
+
+                  
+
+            if "thread_ts" in message:
+                channelMessage["thread_ts"] = message['thread_ts']
+            if "ts" in message:
+                channelMessage["ts"] = message["ts"]
+            if "client_msg_id" in message:
+               channelMessage["id"] = message['client_msg_id']    
+               messages.update({message['client_msg_id']: channelMessage})
+            if "bot_id"  in message:
+                channelMessage["id"] = message['bot_id']
+                messages.update({message['bot_id']: channelMessage}) 
+
+                
+
+        #print("channelMessages", messages)
+
+        return messages,nextCursor
+
 
     def listMessages(self, channelCode):
         """
@@ -126,6 +230,89 @@ class SlackUtil:
         #print("channelMessages", messages)
 
         return messages
+
+
+    def getMessagesByUserPage(self, channelCode,user_id,nextCursor,count):
+        """"
+        return messages given user_id and channel code
+
+        Parameters
+        -------
+        channelCode : str
+             the channel code
+        user_id : str
+             user id 
+
+        Returns
+        -------
+        list
+           list of user messages in the channel         
+        """
+
+        if nextCursor == "None":
+           nextCursor = None 
+
+        messagesList = self.sc.api_call(
+            "conversations.history",
+            channel=channelCode,
+            cursor=nextCursor,
+            limit=count
+        )
+        #print("messagesList",messagesList)
+        nextCursor = None
+
+        if "response_metadata" in messagesList:
+            nextCursor = messagesList["response_metadata"]["next_cursor"]
+
+        messages = {}
+
+        profiles = {}
+
+        #channels = {}
+
+        channel = self.getChannelById(channelCode)
+
+        for message in messagesList["messages"]:
+
+            channelMessage = {}
+            channelMessage["text"] = message['text']
+            channelMessage["channel_id"] = channelCode
+            channelMessage["channel"] = channel
+            
+            #print("channel Message", channelMessage)
+            if "user" in message:
+                channelMessage["user"] = message['user']
+                if message['user'] in profiles:
+                   channelMessage['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   channelMessage["profile"] = profiles[message['user']]
+            if "username" in message:
+                channelMessage["user"] = message['username']
+                
+
+                  
+
+            if "thread_ts" in message:
+                channelMessage["thread_ts"] = message['thread_ts']
+            if "ts" in message:
+                channelMessage["ts"] = message["ts"]
+
+            if channelMessage['user'] == user_id:
+
+               if "client_msg_id" in message:
+                  channelMessage["id"] = message['client_msg_id']    
+                  messages.update({message['client_msg_id']: channelMessage})
+               if "bot_id"  in message:
+                  channelMessage["id"] = message['bot_id']
+                  messages.update({message['bot_id']: channelMessage}) 
+
+                
+
+        #print("channelMessages", messages)
+
+        return messages,nextCursor
+
 
     def getMessagesByUser(self, channelCode,user_id):
         """"
@@ -248,6 +435,58 @@ class SlackUtil:
         channel_name = channel["channel"]["name"]
         return channel_name
 
+    def getRepliesByThreadIdPage(self,channel_id,thread_id,nextCursor,count):
+        """"
+         returns the replies given the thread id.
+
+         Parameters
+         ----------
+         channel_id : str
+              channel_id
+         thread_id : str
+              thread_id
+
+         Returns
+         ------
+         list
+           list of messages           
+
+        """
+
+        threadMessages = self.sc.api_call(
+        "conversations.replies",
+        channel=channel_id,
+        ts=thread_id,
+        cursor=nextCursor,
+        limit=count
+        #inclusive=true
+        ) 
+        
+        nextCursor = None
+
+        if "response_metadata" in threadMessages:
+            nextCursor = threadMessages["response_metadata"]["next_cursor"]
+
+        messages = threadMessages["messages"]
+        threadSpecificMessages = {}
+        profiles = {}
+        for message in messages:
+            message["channel_id"] = channel_id
+            if "client_msg_id" in message:
+                  message["id"] = message['client_msg_id']    
+            if "bot_id"  in message:
+                  message["id"] = message['bot_id']
+            if not "reply_count" in message:
+               threadSpecificMessages.update({message['id']:message})
+               if "user" in message:
+                if message['user'] in profiles:
+                   message['profile'] = profiles[message['user']]
+                else:
+                   profiles[message['user']] = self.getUserById(message['user'])
+                   message["profile"] = profiles[message['user']]
+        return threadSpecificMessages,nextCursor
+
+
     def getRepliesByThreadId(self,channel_id,thread_id):
         """"
          returns the replies given the thread id.
@@ -270,8 +509,11 @@ class SlackUtil:
         "conversations.replies",
         channel=channel_id,
         ts=thread_id
+
         #inclusive=true
         ) 
+
+
         
         messages = threadMessages["messages"]
         threadSpecificMessages = {}

@@ -57,7 +57,12 @@
                     <a class="page-link" href="#">&laquo;</a>
                   </li>
                   <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
+
+                    {% if nextCursor == None %}
+                      <a class="page-link" href="/nlp/results/{{user_id}}?channel_id={{channel_id}}&page=">Next</a>
+                    {% else %}  
+                    <a class="page-link" href="/nlp/results/{{user_id}}?channel_id={{channel_id}}&page={{nextCursor}}">Next</a>
+                    {% endif %}
                   </li>
                   <li class="page-item">
                     <a class="page-link" href="#">&raquo;</a>

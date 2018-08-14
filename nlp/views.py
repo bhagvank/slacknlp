@@ -154,13 +154,20 @@ def index(request):
      HttpResponse
         content is the result of render method     
     """
-    print("index")
+    #print("index")
+    
+    page,count = _parsePage(request)
+
+    print("page", page)
+
     slack = SlackUtil()
-    channels = slack.listChannels()
+    #channels = slack.listChannels()
+    channels,nextCursor = slack.listChannelsPage(page,count)
     #printf("channels", channels)
     # messages = listMessages("CBR05AS5N")
     template_name = 'nlp/index.html'
-    context = {'channels': channels}
+    context = {'channels': channels,
+                'nextCursor': nextCursor}
     # context_object_name = 'channels'
     return render(request, template_name, context)
 
@@ -180,9 +187,12 @@ def detail(request, channel_id):
        """    
 
        #return HttpResponse("You're looking at question %s." % channel_id)
-       template_name = 'nlp/detail.html'
+       page,count = _parsePage(request)
+
+       
        slack = SlackUtil()
-       messages = slack.listMessages(channel_id)
+       #messages = slack.listMessages(channel_id)
+       messages,nextCursor = slack.listMessagesPage(channel_id,page,count)
        #print("messages in view", messages)
        channelMessages = []
        for key,value in messages.items():
@@ -190,10 +200,12 @@ def detail(request, channel_id):
            channelMessages.append(channelMessage)
        channel_name = slack.getChannelById(channel_id)
 
+       template_name = 'nlp/detail.html'
 
        context = {'messages': channelMessages,
                    'channel': channel_name,
-                   'channel_id': channel_id}
+                   'channel_id': channel_id,
+                   'nextCursor': nextCursor}
        return render(request, template_name, context)
 
 def results(request, user_id):
@@ -210,42 +222,51 @@ def results(request, user_id):
         content is the result of render method     
     """
     full_path = request.get_full_path()
-    split_path = full_path.split("=")
+    split_path = full_path.split("&")
 
-    channel_id = split_path[-1]
+    
+
+    page = None
+
+    channel_id = None
+
+    if "&" in full_path:
+
+       pagePath = split_path[-1].split("=")
+
+       page = pagePath[-1]
+
+       print("page ", page)
+
+       previous_path = split_path[0].split("=")
+
+       channel_id = previous_path[-1]
+
+    else:
+    
+       split_path = full_path.split("=")
+       channel_id = split_path[-1]
+
+
+    count = 10
+
 
     template_name = 'nlp/results.html'
     slack = SlackUtil()
     #messages= {}
-    messages = slack.getMessagesByUser(channel_id,user_id)
+    messages, nextCursor = slack.getMessagesByUserPage(channel_id,user_id,page,count)
     channel_name = slack.getChannelById(channel_id)
-    #channels = slack.listChannels()
-    #messages = {}
-    #for channel in channels:
-        #print("channel in view",channel)
-    #   channelMessages = slack.listMessages(channel["id"])
-    #    messages.update({channel["id"]:channelMessages})
-    #print("in results", messages)    
-    #allMessages = slack.groupThreadMessagesByUser(messages)
-    #print("in results userMessages", userMessages)
     nlp = NLPUtil()
-    #userSpecificMessages = {}
-    #for key,value in userMessages.items():
-    #threadMessages = userMessages[user_id]
-    #for threadkey,threadMessage in threadMessages.items():
-    #    for messageKey,message in threadMessage.items():
-    #        userSpecificMessages.update({threadkey:message})
-    #print("in results userspecific",userSpecificMessages)
-    #allMessages = {}
-    #for key,threadMessage in threadMessages.items():
-    #    for messagekey, message in threadMessage.items():
-    #        allMessages.update({messagekey:message})
+
     sentiments = nlp.analyseContentSentiment(messages)
     #print("in results",sentiments)
     user_name = slack.getUserById(user_id)
     context = {'sentiments': sentiments,
                'user': user_name,
-               'channel': channel_name
+                'user_id':user_id,
+                'channel_id':channel_id,
+               'channel': channel_name,
+               'nextCursor': nextCursor
                }
     return render(request, template_name, context)
 
@@ -263,13 +284,38 @@ def threads(request, thread_id):
         content is the result of render method     
     """    
 
-    full_path = request.get_full_path()
-    split_path = full_path.split("=")
 
-    channel_id = split_path[-1]
-    template_name = 'nlp/threads.html'
+    full_path = request.get_full_path()
+    split_path = full_path.split("&")
+
+    
+
+    page = None
+
+    channel_id = None
+
+    if "&" in full_path:
+
+       pagePath = split_path[-1].split("=")
+
+       page = pagePath[-1]
+
+       print("page ", page)
+
+       previous_path = split_path[0].split("=")
+
+       channel_id = previous_path[-1]
+
+    else:
+    
+       split_path = full_path.split("=")
+       channel_id = split_path[-1]
+
+    count = 10
+
+
     slack = SlackUtil()
-    messages = slack.getRepliesByThreadId(channel_id,thread_id)
+    messages,nextCursor = slack.getRepliesByThreadIdPage(channel_id,thread_id,page,count)
     
     #threadMessages = {}
     #for message in messages:
@@ -284,6 +330,31 @@ def threads(request, thread_id):
     #print("in results",sentiments)
     context = {'sentiments': sentiments,
                'thread': thread_id,
-                'channel_id': channel
+                'channel': channel,
+                'channel_id': channel_id,
+                'nextCursor': nextCursor
                }
+    template_name = 'nlp/threads.html' 
+              
     return render(request, template_name, context)
+
+
+def _parsePage(request):
+
+    full_path = request.get_full_path()
+
+    split_path = full_path.split("?")
+
+    #print("split_path-1",split_path[-1])
+
+    page = None
+
+    if "?" in full_path:
+
+       pagePath = split_path[1].split("page=")
+
+       page = pagePath[-1]
+
+    count = 10
+
+    return page,count
