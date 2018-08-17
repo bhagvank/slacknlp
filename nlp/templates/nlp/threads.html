@@ -50,7 +50,7 @@
                   </li>
                   <li class="page-item active">
                     {% if nextCursor == None %}
-                      <a class="page-link" href="/nlp/threads/{{thread}}?channel_id={{channel_id}}&page=">Next</a>
+                      <a class="page-link" href="/nlp/threads/{{thread}}?channel_id={{channel_id}}&page=">First</a>
                     {% else %}
                     <a class="page-link" href="/nlp/threads/{{thread}}?channel_id={{channel_id}}&page={{nextCursor}}">Next</a>
                     {% endif %}
