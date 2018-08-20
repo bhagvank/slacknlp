@@ -40,7 +40,7 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                      <a class="nav-link" href="signup">SignUp <span class="sr-only">(current)</span></a>
+                      <a class="nav-link" href="/nlp/signup">SignUp <span class="sr-only">(current)</span></a>
                     </li>
                   </ul>
                 </div>
@@ -73,10 +73,12 @@
                   <div class="form-group">
                     <label for="useremail">Email address</label>
                     <input type="email" class="form-control" id="useremail" name="useremail" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted"> {{ error_useremail }} </small>
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <input type="password" class="form-control" id="password" name="password" aria-describedby="emailHelp" placeholder="Password">
+                    <small id="passwordHelp" class="form-text text-muted">{{ error_password }}</small>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
               </fieldset>

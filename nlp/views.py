@@ -48,22 +48,38 @@ def authenticate(request):
     """
     #slack = SlackUtil()
     #channels = slack.listChannels()
-    #printf("channels", channels)
+    print("authenticating")
     # messages = listMessages("CBR05AS5N")
     username = request.POST['useremail']
     password = request.POST['password']
 
-    user = get_object_or_404(SlackUser, username=username)
+    error_password = None
+    try:
+       user = get_object_or_404(SlackUser, username=username)
+    except:
+       template_name = 'nlp/login.html'
+       error_username = "Invalid username"
+       context = {'error_useremail': error_username,
+                'error_password': error_password}
+       return render(request, template_name,context)   
+    #print(user)
+    if user:
+       check, error_username, error_password = user.authenticate(username, password)
+       print(check,error_username,error_password)
+       if check:
 
-    if user.authenticate(username,password):
-
-       template_name = 'nlp/main.html'
+          template_name = 'nlp/main.html'
+       else :
+         print("setting template as login") 
+         template_name = 'nlp/login.html'   
     else :
-    
-       template_name = 'nlp/login.html'   
-    #context = {'channels': channels}
+        print("setting template as login")
+        template_name = 'nlp/login.html'
+        error_username = "Invalid username"
+    context = {'error_useremail': error_username,
+                'error_password': error_password}
     # context_object_name = 'channels'
-    return render(request, template_name)    
+    return render(request, template_name,context)    
 
 
 def main(request):
@@ -130,15 +146,43 @@ def signin(request):
     confirmPassword = request.POST['confirmPassword']
     print("password, confirmPassword",password,confirmPassword)
 
-    if password == confirmPassword:
-       user = SlackUser(username=username,password=password)
-       user.save()   
-       template_name = 'nlp/login.html'
+    #if confirmPassword == password:
+
+    error_confirm_password = None
+    error_username = None
+    error_password = None
+    #template_name = 'nlp/signup.html'
+    if username != None:
+
+      if "@" in username and "." in username :
+         print("No error in username")
+         if password != None and confirmPassword != None:
+            print("No error in passwords")
+            if password == confirmPassword:
+               print("password is equal to confirmPassword") 
+               user = SlackUser(username=username,password=password)
+               user.save()   
+               template_name = 'nlp/login.html'
+            else :
+               error_confirm_password = "password and confirm password do not match"
+               template_name = 'nlp/signup.html'
+         else :
+            error_password = "password is not valid"
+            error_confirm_password = "confirm_password is not valid" 
+            template_name = 'nlp/signup.html'     
+      else :
+         error_username = "user email is not valid" 
+         template_name = 'nlp/signup.html'        
     else :
-       template_name = 'nlp/signup.html'   
-    #context = {'channels': channels}
+        print("error in username")
+        error_username = "user email is blank"
+        template_name = 'nlp/signup.html'
+    context = {'error_confirm_password': error_confirm_password,
+                'error_useremail': error_username,
+                'error_password': error_password 
+                }
     # context_object_name = 'channels'
-    return render(request, template_name) 
+    return render(request, template_name,context) 
 
 def index(request):
     """
