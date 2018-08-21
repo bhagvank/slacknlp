@@ -152,31 +152,25 @@ def signin(request):
     error_username = None
     error_password = None
     #template_name = 'nlp/signup.html'
-    if username != None:
 
-      if "@" in username and "." in username :
-         print("No error in username")
-         if password != None and confirmPassword != None:
-            print("No error in passwords")
-            if password == confirmPassword:
-               print("password is equal to confirmPassword") 
-               user = SlackUser(username=username,password=password)
-               user.save()   
-               template_name = 'nlp/login.html'
-            else :
-               error_confirm_password = "password and confirm password do not match"
-               template_name = 'nlp/signup.html'
-         else :
-            error_password = "password is not valid"
-            error_confirm_password = "confirm_password is not valid" 
-            template_name = 'nlp/signup.html'     
-      else :
-         error_username = "user email is not valid" 
-         template_name = 'nlp/signup.html'        
+    error_username = _validate_username(username)
+    error_password, error_confirm_password = _validate_password(password,confirmPassword)
+
+    
+    if error_username == None and error_password == None and error_confirm_password == None:
+       if password == confirmPassword:
+               #print("password is equal to confirmPassword") 
+          user = SlackUser(username=username,password=password)
+          user.save()   
+          template_name = 'nlp/login.html'
+       else :
+               #error_confirm_password = "password and confirm password do not match"
+          template_name = 'nlp/signup.html'
     else :
-        print("error in username")
-        error_username = "user email is blank"
-        template_name = 'nlp/signup.html'
+            #error_password = "password is not valid"
+            #error_confirm_password = "confirm_password is not valid" 
+            template_name = 'nlp/signup.html'     
+      
     context = {'error_confirm_password': error_confirm_password,
                 'error_useremail': error_username,
                 'error_password': error_password 
@@ -402,3 +396,37 @@ def _parsePage(request):
     count = 10
 
     return page,count
+def _validate_username(username):
+    error_username = None    
+    if username == None:
+       #print("error in username")
+       error_username = "user email is blank"
+       #template_name = 'nlp/signup.html' 
+    if "@" not in username or "." not in username :
+       error_username = "user email is not valid" 
+         #template_name = 'nlp/signup.html'       
+    return error_username
+
+def _validate_password(password,confirm_password):
+    error_password = None
+    error_confirm_password = None
+    if password == None:
+       error_password = "password is blank"
+    if confirm_password == None:
+       error_confirm_password = "confirm password is blank"
+    if password != None and confirm_password != None:
+       if password == confirm_password:
+          error_password = None
+          error_confirm_password = None
+       else :
+          error_password = "password and confirm_password do not match"
+          error_confirm_password = "password and confirm_password do not match"   
+    return error_password, error_confirm_password      
+
+
+   
+
+
+
+
+

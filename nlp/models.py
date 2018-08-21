@@ -41,16 +41,26 @@ class SlackUser(models.Model):
          """
 
         check = None
-        error_username = None
-        error_password = None
-        if self.username == username:
-
-           if self.password == password:
-              check = True
-           else :
-             error_password = "InValid Password"
-             check = False  
+        error_username = self._validate_username(username)
+        error_password = self._validate_password(password)
+        if error_username == None and error_password == None:
+           check = True
         else :
-             error_username = "InValid UserName"           
+           check = False              
         return check,error_username,error_password
+
+    def _validate_username(self,username):
+        error_username = None
+        if self.username != username:
+           error_username = "InValid UserName" 
+
+        return error_username
+
+    def _validate_password(self, password):
+        error_password = None
+        if self.password != password: 
+           error_password = "InValid Password"
+        return error_password   
+
+
           
