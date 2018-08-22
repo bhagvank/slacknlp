@@ -92,6 +92,37 @@ class SlackUtil:
       #print(channels)  
       return channels
 
+    def searchAll(self,searchText,pagenum):
+      """
+       return list of matches 
+
+       Returns
+       -------
+       list 
+         the list of matches
+
+      """
+
+      listMatches = self.sc.api_call(
+        "search.all",
+        query=searchText,
+        count=10,
+        page=pagenum
+      )
+      #print("listChannels",listChannels)
+      messages = []
+
+      for match in listMatches ["messages"]["matches"]:
+
+        message = {}
+        message["text"] = match["text"]
+        message["ts"] = match["ts"]
+        message["user"] = match["user"]
+        message["username"] = match["username"]
+        messages.append(message)
+      #print(channels)  
+      return messages
+
     def listMessagesPage(self, channelCode,nextCursor,count):
         """
         return list of messages given  channelCode

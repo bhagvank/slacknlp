@@ -45,8 +45,9 @@
                       <a class="nav-link" href="/nlp">Sign Out</a>
                     </li>
                   </ul>
-                  <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
+                  <form class="form-inline my-2 my-lg-0" action="/nlp/search/" method="post">
+                    {% csrf_token %}
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" name="Search" id="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                   </form>
                 </div>

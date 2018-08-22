@@ -9,6 +9,7 @@ urlpatterns = [
     #path('', views.IndexView.as_view(), name='index'),
     path('', views.login, name='login'),
     path('authenticate/', views.authenticate, name='authenticate'), 
+    path('search/', views.search, name='search'), 
    # path('/nlp/authenticate', views.authenticate, name='authenticate'), 
     path('signin/', views.signin, name='signin'),
     path('main/', views.main, name='main'), 

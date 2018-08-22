@@ -176,7 +176,55 @@ def signin(request):
                 'error_password': error_password 
                 }
     # context_object_name = 'channels'
-    return render(request, template_name,context) 
+    return render(request, template_name,context)
+
+def search(request):
+    """
+    sign in - sign up processing
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("signup")
+    # messages = listMessages("CBR05AS5N")
+    search_text = request.POST['Search']
+   
+    #if confirmPassword == password:
+
+    error_search = None
+    
+    #template_name = 'nlp/signup.html'
+
+    error_search = _validate_search(search_text)
+    
+    messages = []
+    
+    if error_search == None:
+
+          slack = SlackUtil()
+          messages = slack.searchAll(search_text,1)
+               #error_confirm_password = "password and confirm password do not match"
+          template_name = 'nlp/search.html'
+    else :
+            #error_password = "password is not valid"
+            #error_confirm_password = "confirm_password is not valid" 
+            template_name = 'nlp/index.html'     
+      
+    context = { 'error_search': error_search,
+                'query': search_text,
+                'messages' : messages,
+                'nextCursor': None
+                }
+    # context_object_name = 'channels'
+    return render(request, template_name,context)     
 
 def index(request):
     """
@@ -406,6 +454,12 @@ def _validate_username(username):
        error_username = "user email is not valid" 
          #template_name = 'nlp/signup.html'       
     return error_username
+
+def _validate_search(search):
+    error_search = None    
+    if search == None:
+       error_search = "search query is blank"      
+    return error_search
 
 def _validate_password(password,confirm_password):
     error_password = None
