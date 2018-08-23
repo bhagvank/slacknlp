@@ -1,4 +1,5 @@
 {% extends "nlp/base.html" %}
+{% load mathfilters %}
 {% block title %}Messages{% endblock %}
 
 
@@ -11,7 +12,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="page-header">
-              <h1 id="tables">Search {{ query}} - Messages</h1>
+              <h1 id="tables">Search '{{ query}}' - Messages</h1>
             </div>
 
             <div class="bs-component">
@@ -44,28 +45,44 @@
             <div class="bs-component">
               <div>
                 <ul class="pagination">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#">&laquo;</a>
-                  </li>
-                  <li class="page-item active">
-                    {% if nextCursor == None %}
-                      <a class="page-link" href="/nlp/search/?page=">First</a>
-                    {% else %}
-
-                    <a class="page-link" href="/nlp/search/?page={{nextCursor}}">Page {{nextCursor}}</a>
-                    {% endif %}
-
-                  </li>
+                  {% if page_num > 1 %}
                   <li class="page-item">
-                    <a class="page-link" href="#">&raquo;</a>
+
+                  {% else %}  
+                  <li class="page-item disabled">  
+                  {% endif %}  
+                    <a class="page-link" href="/nlp/search/?page={{page_num|sub:1}}&search={{query}}">Previous</a>
                   </li>
+                  
+                  {% for i in loop_count %}
+                  {% if i == page_num %}
+                  <li class="page-item active">
+                      <a class="page-link" href="/nlp/search/?page={{i}}&search={{query}}">{{i}}</a>
+                  </li>
+                  {% else %}
+                  <li class="page-item">
+                      <a class="page-link" href="/nlp/search/?page={{i}}&search={{query}}">{{i}}</a>
+                  </li>
+
+                  {% endif %}
+                   {% endfor %}
+                  {% if page_num <  page_count %}
+                    <li class="page-item">
+                  {% else %}
+                    <li class="page-item disabled">
+                  {% endif %}  
+                    <a class="page-link" href="/nlp/search/?page={{page_num|add:1}}&search={{query}}">Next</a>
+                  </li>
+                  
                 </ul>
               </div>
       </div>
     </div>  
     
 {% else %}
-    <p>No messages are available.</p>
+    <br>
+    <br>
+    <p>Search Query is Blank. Fill the search Field and click on search</p>
 {% endif %}
 {% endblock %}
 

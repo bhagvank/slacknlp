@@ -195,33 +195,46 @@ def search(request):
     #channels = slack.listChannels()
     #printf("signup")
     # messages = listMessages("CBR05AS5N")
-    search_text = request.POST['Search']
-   
-    #if confirmPassword == password:
+
+    count =10
+
+    page,count,query = _parsePageQuery(request)
+
+    search_text = None
 
     error_search = None
-    
-    #template_name = 'nlp/signup.html'
 
-    error_search = _validate_search(search_text)
+    if page == None:
+       page =1
+       search_text = request.POST['Search']
+       print("search text",search_text)
+       error_search = _validate_search(search_text)
+    else :
+       search_text =  query  
+   
     
     messages = []
+
     
+    page_count = 0
+
     if error_search == None:
 
           slack = SlackUtil()
-          messages = slack.searchAll(search_text,1)
+          messages,page_count = slack.searchAll(search_text,page,count)
                #error_confirm_password = "password and confirm password do not match"
           template_name = 'nlp/search.html'
     else :
             #error_password = "password is not valid"
             #error_confirm_password = "confirm_password is not valid" 
-            template_name = 'nlp/index.html'     
+            template_name = 'nlp/search.html'     
       
     context = { 'error_search': error_search,
                 'query': search_text,
                 'messages' : messages,
-                'nextCursor': None
+                'page_num' : int(page),
+                'page_count': page_count,
+                'loop_count': range(1,page_count+1)
                 }
     # context_object_name = 'channels'
     return render(request, template_name,context)     
@@ -244,6 +257,8 @@ def index(request):
     
     page,count = _parsePage(request)
 
+    
+
     print("page", page)
 
     slack = SlackUtil()
@@ -253,7 +268,8 @@ def index(request):
     # messages = listMessages("CBR05AS5N")
     template_name = 'nlp/index.html'
     context = {'channels': channels,
-                'nextCursor': nextCursor}
+                'nextCursor': nextCursor
+                }
     # context_object_name = 'channels'
     return render(request, template_name, context)
 
@@ -444,6 +460,37 @@ def _parsePage(request):
     count = 10
 
     return page,count
+def _parsePageQuery(request):
+
+    full_path = request.get_full_path()
+
+    split_path = full_path.split("?")
+
+    #print("split_path-1",split_path[-1])
+
+    page = None
+
+    query = None
+
+    if "?" in full_path:
+
+       if "&" in full_path:
+
+         parameterPath = split_path[1].split("&")
+
+         pagePath = parameterPath[0].split("page=")
+
+         page = pagePath[-1]
+
+         queryPath = parameterPath[1].split("search=")
+
+         query = queryPath[-1]
+       else :
+          pagePath = split_path[1].split("page=")
+          page = pagePath[-1]
+    count = 10
+
+    return page,count,query   
 def _validate_username(username):
     error_username = None    
     if username == None:
@@ -457,7 +504,7 @@ def _validate_username(username):
 
 def _validate_search(search):
     error_search = None    
-    if search == None:
+    if search == None or search == "":
        error_search = "search query is blank"      
     return error_search
 

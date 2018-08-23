@@ -92,7 +92,7 @@ class SlackUtil:
       #print(channels)  
       return channels
 
-    def searchAll(self,searchText,pagenum):
+    def searchAll(self,searchText,pagenum,count):
       """
        return list of matches 
 
@@ -106,10 +106,11 @@ class SlackUtil:
       listMatches = self.sc.api_call(
         "search.all",
         query=searchText,
-        count=10,
+        count=count,
         page=pagenum
       )
       #print("listChannels",listChannels)
+      count = listMatches["messages"]["pagination"]["page_count"]
       messages = []
 
       for match in listMatches ["messages"]["matches"]:
@@ -121,7 +122,7 @@ class SlackUtil:
         message["username"] = match["username"]
         messages.append(message)
       #print(channels)  
-      return messages
+      return messages,count
 
     def listMessagesPage(self, channelCode,nextCursor,count):
         """
@@ -148,6 +149,8 @@ class SlackUtil:
 
         if "response_metadata" in messagesList:
             nextCursor = messagesList["response_metadata"]["next_cursor"]
+
+    
 
         messages = {}
 
