@@ -17,7 +17,8 @@ urlpatterns = [
     path('channel/<channel_id>/', views.detail, name='detail'), 
     path('results/<user_id>/', views.results, name='results'),
     path('threads/<thread_id>/', views.threads, name='threads'),
-    path('signup/', views.signup, name='signup'), 
+    path('signup/', views.signup, name='signup'),
+    path('logout/', views.logout, name='logout'), 
 
     # ex: /polls/5/
     #path('<int:pk>/', views.DetailView.as_view(), name='detail'),

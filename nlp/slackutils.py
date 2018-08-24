@@ -15,7 +15,7 @@ class SlackUtil:
     """
     
 
-    def __init__(self):
+    def __init__(self,slack_token):
      """"
      non parameterized constructor
 
@@ -24,7 +24,8 @@ class SlackUtil:
      """ 
 
      self.data = []
-     self.slack_token = os.environ['SLACK_TOKEN']
+     #self.slack_token = os.environ['SLACK_TOKEN']
+     self.slack_token = slack_token
      self.sc = SlackClient(self.slack_token)
      #print("slack client", self.sc)
      kwargs = {'aws_access_key_id': os.environ['ACCESS_KEY_ID'], 'aws_secret_access_key': os.environ['SECRET_ACCESS_KEY']}   

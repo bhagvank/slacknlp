@@ -83,6 +83,11 @@
                     <input type="confirm_password" class="form-control" id="confirmPassword" name="confirmPassword" aria-describedby="confirmPasswordHelp" placeholder="Password">
                     <small id="confirmPasswordHelp" class="form-text text-muted">{{ error_confirm_password }}</small>
                   </div>
+                   <div class="form-group">
+                    <label for="slacktoken">Slack API Token</label>
+                    <input type="slack_token" class="form-control" id="slacktoken" name="slacktoken" aria-describedby="slackTokenHelp" placeholder="Enter Slack Token">
+                    <small id="slackTokenHelp" class="form-text text-muted">{{ error_slack_token }}</small>
+                  </div>
                   <button type="submit" class="btn btn-primary">Sign Up</button>
               </fieldset>
             </form>

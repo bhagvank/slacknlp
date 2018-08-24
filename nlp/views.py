@@ -9,6 +9,7 @@ from django.template import loader
 from .models import SlackUser
 from .slackutils import SlackUtil
 from .NLPUtils import NLPUtil
+import os
 
 def login(request):
     """
@@ -32,6 +33,32 @@ def login(request):
     #context = {'channels': channels}
     # context_object_name = 'channels'
     return render(request, template_name)
+def logout(request):
+    """
+    logout page call
+
+    Parameters
+    ----------
+    request : HttpRequest
+         request object
+
+    Returns
+    -----------
+     HttpResponse
+        content is the result of render method     
+    """
+    #slack = SlackUtil()
+    #channels = slack.listChannels()
+    #printf("channels", channels)
+    # messages = listMessages("CBR05AS5N")
+    try:
+       del request.session["slack_token"]
+    except KeyError:
+       pass   
+    template_name = 'nlp/login.html'
+    #context = {'channels': channels}
+    # context_object_name = 'channels'
+    return render(request, template_name)    
 
 def authenticate(request):
     """
@@ -67,7 +94,7 @@ def authenticate(request):
        check, error_username, error_password = user.authenticate(username, password)
        print(check,error_username,error_password)
        if check:
-
+          request.session["slack_token"] = user.getSlackToken()
           template_name = 'nlp/main.html'
        else :
          print("setting template as login") 
@@ -144,6 +171,7 @@ def signin(request):
     username = request.POST['useremail']
     password = request.POST['password']
     confirmPassword = request.POST['confirmPassword']
+    slackToken = request.POST['slacktoken']
     print("password, confirmPassword",password,confirmPassword)
 
     #if confirmPassword == password:
@@ -151,17 +179,19 @@ def signin(request):
     error_confirm_password = None
     error_username = None
     error_password = None
+    error_slack_token =  None
     #template_name = 'nlp/signup.html'
 
     error_username = _validate_username(username)
     error_password, error_confirm_password = _validate_password(password,confirmPassword)
-
+    error_slack_token = _validate_slack_token(slackToken)
     
-    if error_username == None and error_password == None and error_confirm_password == None:
+    if error_username == None and error_password == None and error_confirm_password == None and error_slack_token == None:
        if password == confirmPassword:
                #print("password is equal to confirmPassword") 
-          user = SlackUser(username=username,password=password)
-          user.save()   
+          user = SlackUser(username=username,password=password,slacktoken=slackToken)
+          user.save()
+
           template_name = 'nlp/login.html'
        else :
                #error_confirm_password = "password and confirm password do not match"
@@ -173,7 +203,8 @@ def signin(request):
       
     context = {'error_confirm_password': error_confirm_password,
                 'error_useremail': error_username,
-                'error_password': error_password 
+                'error_password': error_password,
+                'error_slack_token': error_slack_token 
                 }
     # context_object_name = 'channels'
     return render(request, template_name,context)
@@ -220,7 +251,8 @@ def search(request):
 
     if error_search == None:
 
-          slack = SlackUtil()
+          slack_token = request.session["slack_token"]
+          slack = SlackUtil(slack_token)
           messages,page_count = slack.searchAll(search_text,page,count)
                #error_confirm_password = "password and confirm password do not match"
           template_name = 'nlp/search.html'
@@ -261,7 +293,8 @@ def index(request):
 
     print("page", page)
 
-    slack = SlackUtil()
+    slack_token = request.session["slack_token"]
+    slack = SlackUtil(slack_token)
     #channels = slack.listChannels()
     channels,nextCursor = slack.listChannelsPage(page,count)
     #printf("channels", channels)
@@ -292,7 +325,8 @@ def detail(request, channel_id):
        page,count = _parsePage(request)
 
        
-       slack = SlackUtil()
+       slack_token = request.session["slack_token"]
+       slack = SlackUtil(slack_token)
        #messages = slack.listMessages(channel_id)
        messages,nextCursor = slack.listMessagesPage(channel_id,page,count)
        #print("messages in view", messages)
@@ -354,7 +388,8 @@ def results(request, user_id):
 
 
     template_name = 'nlp/results.html'
-    slack = SlackUtil()
+    slack_token = request.session["slack_token"]
+    slack = SlackUtil(slack_token)
     #messages= {}
     messages, nextCursor = slack.getMessagesByUserPage(channel_id,user_id,page,count)
     channel_name = slack.getChannelById(channel_id)
@@ -416,7 +451,8 @@ def threads(request, thread_id):
     count = 10
 
 
-    slack = SlackUtil()
+    slack_token = request.session["slack_token"]
+    slack = SlackUtil(slack_token)
     messages,nextCursor = slack.getRepliesByThreadIdPage(channel_id,thread_id,page,count)
     
     #threadMessages = {}
@@ -507,6 +543,15 @@ def _validate_search(search):
     if search == None or search == "":
        error_search = "search query is blank"      
     return error_search
+
+def _validate_slack_token(slack_token):
+    error_slack_token = None 
+    print("slack_token", slack_token)
+    if slack_token == None or slack_token == "":
+       slack_os_token = os.environ['SLACK_TOKEN']
+       error_slack_token = "slack token is blank, if you do not have one, you can use "+slack_os_token      
+    return error_slack_token   
+
 
 def _validate_password(password,confirm_password):
     error_password = None
