@@ -82,8 +82,11 @@ def authenticate(request):
     # messages = listMessages("CBR05AS5N")
     username = request.POST['useremail']
     password = request.POST['password']
+
+    
  
-    logger.info("authenticate username "+username + "password "+ base64.b64encode("password"))
+    logger.info("authenticate username "+username )
+    #+ "password "+ password.encode('base64')
 
     error_password = None
     try:
@@ -101,16 +104,19 @@ def authenticate(request):
        if check:
           request.session["slack_token"] = user.getSlackToken()
           template_name = 'nlp/main.html'
-          logger.info("authenticated username "+username + "password "+ base64.b64encode("password"))
+          logger.info("authenticated username "+username)
+          # + "password "+ password.encode('base64'))
        else :
          print("setting template as login") 
          template_name = 'nlp/login.html'
-         logger.info("authenticate failure username "+username + "password "+ base64.b64encode("password"))   
+         logger.info("authenticate failure username "+username )
+         #+ "password "+ password.encode('base64'))   
     else :
         print("setting template as login")
         template_name = 'nlp/login.html'
         error_username = "Invalid username"
-        logger.info("validation failure username "+username + "password "+ base64.b64encode("password"))
+        logger.info("validation failure username "+username )
+        #+ "password "+ password.encode('base64'))
     context = {'error_useremail': error_username,
                 'error_password': error_password}
     # context_object_name = 'channels'
