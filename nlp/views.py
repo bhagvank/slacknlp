@@ -96,7 +96,7 @@ def authenticate(request):
        return render(request, template_name,context)   
     #print(user)
     if user:
-       check, error_username, error_password = user.authenticate(username, base64.b64encode("password"))
+       check, error_username, error_password = user.authenticate(username, password)
        print(check,error_username,error_password)
        if check:
           request.session["slack_token"] = user.getSlackToken()
