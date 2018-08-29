@@ -10,6 +10,8 @@ from .models import SlackUser
 from .slackutils import SlackUtil
 from .NLPUtils import NLPUtil
 import os
+import logging
+logger = logging.getLogger("nlp_logger")
 
 def login(request):
     """
@@ -79,6 +81,8 @@ def authenticate(request):
     # messages = listMessages("CBR05AS5N")
     username = request.POST['useremail']
     password = request.POST['password']
+ 
+    logger.info("authenticate username "+username + "password "+ base64.b64encode("password"))
 
     error_password = None
     try:
@@ -91,18 +95,21 @@ def authenticate(request):
        return render(request, template_name,context)   
     #print(user)
     if user:
-       check, error_username, error_password = user.authenticate(username, password)
+       check, error_username, error_password = user.authenticate(username, base64.b64encode("password"))
        print(check,error_username,error_password)
        if check:
           request.session["slack_token"] = user.getSlackToken()
           template_name = 'nlp/main.html'
+          logger.info("authenticated username "+username + "password "+ base64.b64encode("password"))
        else :
          print("setting template as login") 
-         template_name = 'nlp/login.html'   
+         template_name = 'nlp/login.html'
+         logger.info("authenticate failure username "+username + "password "+ base64.b64encode("password"))   
     else :
         print("setting template as login")
         template_name = 'nlp/login.html'
         error_username = "Invalid username"
+        logger.info("validation failure username "+username + "password "+ base64.b64encode("password"))
     context = {'error_useremail': error_username,
                 'error_password': error_password}
     # context_object_name = 'channels'
@@ -255,7 +262,20 @@ def search(request):
           slack = SlackUtil(slack_token)
           messages,page_count = slack.searchAll(search_text,page,count)
                #error_confirm_password = "password and confirm password do not match"
-          template_name = 'nlp/search.html'
+          template_name = 'nlp/tabs.html'
+          nlp = NLPUtil()
+          messagesDict = {}
+
+          for message in messages :
+              messagesDict[message['ts']] = message
+
+          #message
+          sentiments = nlp.analyseContentSentiment(messagesDict)
+          messageEntities = nlp.analyseEntities(messagesDict)
+          print("entities",messageEntities)
+          messageSentiments = nlp.analyseEntitySentiments(messagesDict)
+          print("entities",messageEntities)
+
     else :
             #error_password = "password is not valid"
             #error_confirm_password = "confirm_password is not valid" 
@@ -265,8 +285,14 @@ def search(request):
                 'query': search_text,
                 'messages' : messages,
                 'page_num' : int(page),
+                'page_sen' : int(page),
+                'page_en'  : int(page),
+                'page_ensen': int(page),
                 'page_count': page_count,
-                'loop_count': range(1,page_count+1)
+                'loop_count': range(1,page_count+1),
+                'sentiments': sentiments,
+                'entities': messageEntities,
+                'entitysentiments': messageSentiments
                 }
     # context_object_name = 'channels'
     return render(request, template_name,context)     
@@ -394,6 +420,8 @@ def results(request, user_id):
     messages, nextCursor = slack.getMessagesByUserPage(channel_id,user_id,page,count)
     channel_name = slack.getChannelById(channel_id)
     nlp = NLPUtil()
+
+    
 
     sentiments = nlp.analyseContentSentiment(messages)
     #print("in results",sentiments)
