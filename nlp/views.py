@@ -11,6 +11,7 @@ from .slackutils import SlackUtil
 from .NLPUtils import NLPUtil
 import os
 import logging
+import base64
 logger = logging.getLogger("nlp_logger")
 
 def login(request):
