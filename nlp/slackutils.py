@@ -56,7 +56,7 @@ class SlackUtil:
         limit=count,
         exclude_archived=1)
       #print("listChannels",listChannels)
-      self.logger.info("listChannels"+listChannels)
+      self.logger.info("listChannels"+json.dump(listChannels))
 
       nextCursor = listChannels["response_metadata"]["next_cursor"]
       channels = []
