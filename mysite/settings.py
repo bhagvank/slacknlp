@@ -146,6 +146,10 @@ LOGGING = {
         },
     },
     'loggers': {
+         'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
         'django.request': {
             'handlers': ['mail_admins', 'stream_to_console'],
             'level': 'ERROR',
@@ -157,6 +161,7 @@ LOGGING = {
         'nlp_logger': {
             'handlers': ['file'],
             'level': 'INFO',
+            'propagate': True,
         },
     }
 }
