@@ -156,7 +156,6 @@ LOGGING = {
         'nlp_logger': {
             'handlers': ['file'],
             'level': 'INFO',
-            'propagate': True,
         },
     }
 }
