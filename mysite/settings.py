@@ -150,6 +150,9 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'nlp': {
+            'handlers': ['file']
+        },
         'nlp_logger': {
             'handlers': ['file'],
             'level': 'INFO',
