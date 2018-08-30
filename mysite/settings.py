@@ -166,8 +166,7 @@ LOGGING = {
         },
         'nlp_logger': {
             'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     }
 }
