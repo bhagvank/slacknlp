@@ -6,6 +6,9 @@ import os
 from boto.s3.connection import S3Connection
 import boto
 from boto.s3.key import Key
+import logging
+import base64
+
 
 
 class SlackUtil:
@@ -27,6 +30,7 @@ class SlackUtil:
      #self.slack_token = os.environ['SLACK_TOKEN']
      self.slack_token = slack_token
      self.sc = SlackClient(self.slack_token)
+     self.logger = logging.getLogger("django")
      #print("slack client", self.sc)
      kwargs = {'aws_access_key_id': os.environ['ACCESS_KEY_ID'], 'aws_secret_access_key': os.environ['SECRET_ACCESS_KEY']}   
      conn = boto.s3.connect_to_region(os.environ['AWS_REGION'],**kwargs)
@@ -52,6 +56,7 @@ class SlackUtil:
         limit=count,
         exclude_archived=1)
       #print("listChannels",listChannels)
+      self.logger.info("listChannels"+listChannels)
 
       nextCursor = listChannels["response_metadata"]["next_cursor"]
       channels = []
