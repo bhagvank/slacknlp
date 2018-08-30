@@ -192,6 +192,5 @@ import dj_database_url
 DATABASE_URL = 'postgresql://postgresql'
 
 DATABASES = { 'default' : dj_database_url.config(default=DATABASE_URL)}
-import django_heroku
-django_heroku.settings(locals())
+
 
