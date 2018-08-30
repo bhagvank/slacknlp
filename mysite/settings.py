@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 import os
+import django_heroku
 
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 SITE_ROOT = os.path.dirname(PROJECT_ROOT)
@@ -186,4 +187,5 @@ import dj_database_url
 DATABASE_URL = 'postgresql://postgresql'
 
 DATABASES = { 'default' : dj_database_url.config(default=DATABASE_URL)}
+django_heroku.settings(locals())
 
