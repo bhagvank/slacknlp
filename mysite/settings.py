@@ -144,6 +144,11 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': 'slacknlp.log',
         },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout
+        }
     },
     'loggers': {
          'django': {
