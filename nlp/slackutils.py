@@ -166,6 +166,8 @@ class SlackUtil:
 
         channel = self.getChannelById(channelCode)
 
+        #print("channelName",channel)
+
         for message in messagesList["messages"]:
 
             channelMessage = {}
