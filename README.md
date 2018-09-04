@@ -102,5 +102,11 @@ heroku run python manage.py runserver
 ```
 heroku logs --tail
 ```
+6. run the tests locally
+```
+./manage.py test --settings=mysite.run_settings nlp.tests.slackutilsTestCase
+
+./manage.py test --settings=mysite.run_settings nlp.tests.nlputilsTestCase
+```
 
 
