@@ -1,7 +1,7 @@
 # slacknlp
 converse and learn adaptively
 
-![alt text](https://floating-crag-10115.herokuapp.com/static/nlp/images/logo.jpg)
+![alt text](https://github.com/bhagvank/arc/blob/master/logo.jpg)
 
 * [SlackNLP Demo](https://floating-crag-10115.herokuapp.com/nlp/)
 
