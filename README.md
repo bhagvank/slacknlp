@@ -30,12 +30,26 @@ git clone https://github.com/bhagvank/slacknlp.git
    * [Slack](https://api.slack.com/custom-integrations/legacy-tokens)
    * [Google](https://cloud.google.com/compute/docs/access/service-accounts)
    
-4. run locally using settings
+4. Pipenv install : install the packages required
+```
+pipenv install
+```
+
+5. Pipenv shell : Run the virtual env 
+```
+pipenv shell
+```  
+   
+6. run locally using settings
 ```
 python manage.py runserver --settings=mysite.run_settings
 
 ```
-  
+
+7. Exit the shell
+```
+exit
+```  
 
 # Instructions for setting up on heroku
 
